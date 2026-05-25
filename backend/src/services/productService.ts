@@ -18,6 +18,64 @@ function generateEAN13(): string {
 const SKU_SEQ_PAD = 6;
 const SKU_DEFAULT_PREFIX = 'PRD';
 
+/**
+ * Garante que o recurso referenciado pela FK pertence ao tenant.
+ *
+ * Por que existe: o backend NUNCA confia em FKs vindas do cliente. Sem essa
+ * verificação, um cliente malicioso pode mandar `categoryId`/`brandId`/etc
+ * apontando para um recurso de outro tenant — o Prisma persiste alegremente
+ * (constraint de FK é tenant-agnóstica) e o produto fica linkado a dado
+ * alheio. Ao listar com `include`, o tenant vê o nome do recurso de outra
+ * conta — vazamento cross-tenant.
+ *
+ * Aceita qualquer model que tenha `findFirst`; chama com filtro composto por
+ * id + userId; lança mensagem em pt-BR alinhada às demais do projeto.
+ */
+async function assertOwnership(
+  model: { findFirst: (args: any) => Promise<{ id: number } | null> },
+  id: number,
+  userId: number,
+  notFoundMessage: string
+): Promise<void> {
+  const exists = await model.findFirst({
+    where: { id, userId },
+    select: { id: true },
+  });
+  if (!exists) {
+    throw new Error(notFoundMessage);
+  }
+}
+
+/**
+ * Valida ownership das 4 FKs de catálogo aceitas pelo ProductService.
+ * `null` é tratado como "desvincular" (válido); apenas valores numéricos
+ * (IDs concretos) são validados. Roda em paralelo para minimizar latência.
+ */
+async function assertProductForeignKeysOwnership(
+  userId: number,
+  data: {
+    categoryId?: number | null;
+    brandId?: number | null;
+    collectionId?: number | null;
+    supplierId?: number | null;
+  }
+): Promise<void> {
+  const checks: Promise<void>[] = [];
+  if (typeof data.categoryId === 'number') {
+    checks.push(assertOwnership(prisma.productCategory, data.categoryId, userId, 'Categoria não encontrada'));
+  }
+  if (typeof data.brandId === 'number') {
+    checks.push(assertOwnership(prisma.productBrand, data.brandId, userId, 'Marca não encontrada'));
+  }
+  if (typeof data.collectionId === 'number') {
+    checks.push(assertOwnership(prisma.productCollection, data.collectionId, userId, 'Coleção não encontrada'));
+  }
+  if (typeof data.supplierId === 'number') {
+    checks.push(assertOwnership(prisma.supplier, data.supplierId, userId, 'Fornecedor não encontrado'));
+  }
+  await Promise.all(checks);
+}
+
 function normalizeSkuPrefix(raw: string): string {
   const cleaned = raw
     .normalize('NFD')
@@ -97,6 +155,15 @@ interface ProductData {
 
 export class ProductService {
   static async createProduct(userId: number, data: ProductData) {
+    // Valida ownership das FKs ANTES de gerar SKU/criar — qualquer ID de outro
+    // tenant é rejeitado com 400 (mapeado pela rota).
+    await assertProductForeignKeysOwnership(userId, {
+      categoryId: data.categoryId,
+      brandId: data.brandId,
+      collectionId: data.collectionId,
+      supplierId: data.supplierId,
+    });
+
     const barcode = data.barcode || generateEAN13();
 
     const MAX_ATTEMPTS = 5;
@@ -212,6 +279,15 @@ export class ProductService {
     updates: Partial<ProductData>
   ) {
     await this.getProductById(userId, productId);
+
+    // Valida ownership de FKs que vieram com valor numérico no update.
+    // `null` é desvincular (permitido), `undefined` é "não tocar" (ignora).
+    await assertProductForeignKeysOwnership(userId, {
+      categoryId: updates.categoryId,
+      brandId: updates.brandId,
+      collectionId: updates.collectionId,
+      supplierId: updates.supplierId,
+    });
 
     try {
       const data: any = {};
