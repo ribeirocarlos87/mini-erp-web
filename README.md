@@ -23,10 +23,6 @@ graph LR
     Frontend[Frontend<br/>React 18 + Vite] -->|Bearer JWT| Backend
     Backend[Backend<br/>Express + Prisma] -->|SQL| DB[(PostgreSQL 15)]
     Frontend -.localStorage.-> LS[(token<br/>pdv-store)]
-
-    style Frontend fill:#dbeafe,stroke:#2563eb
-    style Backend fill:#dcfce7,stroke:#16a34a
-    style DB fill:#fef3c7,stroke:#d97706
 ```
 
 ### Stack
@@ -243,9 +239,6 @@ graph TB
     FS -.mock.-> AxiosMock[apiClient mockado]
     FC -.usa.-> happydom[happy-dom]
     FP -.usa.-> happydom
-
-    style Postgres fill:#fef3c7,stroke:#d97706
-    style happydom fill:#dbeafe,stroke:#2563eb
 ```
 
 **Total: 497 testes passando, 0 skips, ~55 segundos.**
