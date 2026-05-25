@@ -124,6 +124,46 @@ describe('SaleService.createSale — validações de pré-requisito', () => {
     });
   });
 
+  it('rejeita seller_id de outro tenant (ownership cross-tenant)', async () => {
+    const u1 = await createTestUser();
+    const u2 = await createTestUser();
+    const cliente = await createTestClient(u1.id);
+    const produto = await createTestProduct(u1.id);
+    const sellerOutro = await createTestEmployee(u2.id, 'Vendedor Alheio');
+    const payload = {
+      ...(await setupSimpleSale({
+        userId: u1.id,
+        clientId: cliente.id,
+        productId: produto.id,
+      })),
+      seller_id: sellerOutro.id,
+    };
+
+    await expect(SaleService.createSale(u1.id, payload)).rejects.toMatchObject({
+      status: 400,
+      message: 'Vendedor não encontrado',
+    });
+
+    // Nada foi criado (validação antes da transação)
+    const sales = await prisma.sale.count({ where: { userId: u1.id } });
+    expect(sales).toBe(0);
+  });
+
+  it('aceita seller_id do próprio tenant', async () => {
+    const user = await createTestUser();
+    const cliente = await createTestClient(user.id);
+    const produto = await createTestProduct(user.id);
+    const vendedor = await createTestEmployee(user.id, 'Vendedor Local');
+    const payload = await setupSimpleSale({
+      userId: user.id,
+      clientId: cliente.id,
+      productId: produto.id,
+      sellerId: vendedor.id,
+    });
+    const venda = await SaleService.createSale(user.id, payload);
+    expect(venda!.sellerId).toBe(vendedor.id);
+  });
+
   it('rejeita quando soma dos pagamentos não bate com total (front mentindo)', async () => {
     const user = await createTestUser();
     const cliente = await createTestClient(user.id);

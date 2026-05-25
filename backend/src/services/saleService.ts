@@ -60,6 +60,21 @@ export class SaleService {
       throw { status: 400, message: `Produtos não encontrados: ${missing.join(', ')}` };
     }
 
+    // ── 2.5. Vendedor (se enviado) pertence ao tenant ──
+    //    Sem essa checagem, atacante atribui a venda a vendedor de outro tenant —
+    //    aparece em `include: seller` e distorce comissões/relatórios.
+    let validatedSellerId: number | null = null;
+    if (data.seller_id != null) {
+      const seller = await prisma.employee.findFirst({
+        where: { id: data.seller_id, userId },
+        select: { id: true },
+      });
+      if (!seller) {
+        throw { status: 400, message: 'Vendedor não encontrado' };
+      }
+      validatedSellerId = seller.id;
+    }
+
     // ── 3. Estoque disponível ──
     for (const item of data.items) {
       const product = products.find((p) => p.id === item.product_id)!;
@@ -114,7 +129,7 @@ export class SaleService {
         data: {
           userId,
           clientId: client.id,
-          sellerId: data.seller_id || null,
+          sellerId: validatedSellerId,
           totalValue: saleTotal,
           subtotal: data.subtotal,
           discount: data.discount,
