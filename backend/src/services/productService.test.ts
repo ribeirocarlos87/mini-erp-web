@@ -66,26 +66,61 @@ describe('ProductService.createProduct', () => {
     expect(p!.code).toBe('TIX-000001');
   });
 
-  it('categoria de OUTRO tenant não afeta o prefixo (cai para PRD)', async () => {
+  // ── Ownership cross-tenant das 4 FKs de catálogo ──
+  // Antes do fix, o ProductService aceitava categoryId/brandId/collectionId/supplierId
+  // de outro tenant e gravava silenciosamente. Agora rejeita com 400 (mensagem em pt-BR).
+
+  it('rejeita create com categoryId de outro tenant', async () => {
     const tenant1 = await createTestUser();
     const tenant2 = await createTestUser();
     const catOutro = await createTestCategory(tenant2.id, 'Eletrônicos');
-    // O front pode adulterar categoryId; o backend não vaza prefixo de outro tenant.
-    const p = await ProductService.createProduct(tenant1.id, { name: 'A', categoryId: catOutro.id });
-    expect(p!.code).toBe('PRD-000001');
+    await expect(
+      ProductService.createProduct(tenant1.id, { name: 'A', categoryId: catOutro.id })
+    ).rejects.toThrow('Categoria não encontrada');
   });
 
-  it.skip(
-    'BUG conhecido: produto persiste categoryId de outro tenant — o backend deveria recusar ou anular (segurança/integridade)',
-    async () => {
-      const tenant1 = await createTestUser();
-      const tenant2 = await createTestUser();
-      const catOutro = await createTestCategory(tenant2.id, 'Eletrônicos');
-      const p = await ProductService.createProduct(tenant1.id, { name: 'A', categoryId: catOutro.id });
-      // Esperado (após fix): categoryId nulo, ou erro 400.
-      expect(p!.categoryId).toBeNull();
-    }
-  );
+  it('rejeita create com brandId de outro tenant', async () => {
+    const tenant1 = await createTestUser();
+    const tenant2 = await createTestUser();
+    const brandOutro = await createTestBrand(tenant2.id, 'Nike');
+    await expect(
+      ProductService.createProduct(tenant1.id, { name: 'A', brandId: brandOutro.id })
+    ).rejects.toThrow('Marca não encontrada');
+  });
+
+  it('rejeita create com collectionId de outro tenant', async () => {
+    const tenant1 = await createTestUser();
+    const tenant2 = await createTestUser();
+    const colOutro = await prisma.productCollection.create({ data: { userId: tenant2.id, name: 'Verão' } });
+    await expect(
+      ProductService.createProduct(tenant1.id, { name: 'A', collectionId: colOutro.id })
+    ).rejects.toThrow('Coleção não encontrada');
+  });
+
+  it('rejeita create com supplierId de outro tenant', async () => {
+    const tenant1 = await createTestUser();
+    const tenant2 = await createTestUser();
+    const supOutro = await createTestSupplier(tenant2.id, 'Fornecedor Alheio');
+    await expect(
+      ProductService.createProduct(tenant1.id, { name: 'A', supplierId: supOutro.id })
+    ).rejects.toThrow('Fornecedor não encontrado');
+  });
+
+  it('aceita create com FKs do PRÓPRIO tenant', async () => {
+    const user = await createTestUser();
+    const cat = await createTestCategory(user.id, 'Roupas');
+    const brand = await createTestBrand(user.id, 'Marca Própria');
+    const supplier = await createTestSupplier(user.id, 'Fornecedor Local');
+    const p = await ProductService.createProduct(user.id, {
+      name: 'Produto OK',
+      categoryId: cat.id,
+      brandId: brand.id,
+      supplierId: supplier.id,
+    });
+    expect(p!.categoryId).toBe(cat.id);
+    expect(p!.brandId).toBe(brand.id);
+    expect(p!.supplierId).toBe(supplier.id);
+  });
 
   it('gera EAN-13 (13 dígitos, prefixo 789) quando barcode não informado', async () => {
     const user = await createTestUser();
@@ -251,6 +286,34 @@ describe('ProductService.updateProduct', () => {
     await expect(
       ProductService.updateProduct(u2.id, p!.id, { name: 'hack' })
     ).rejects.toThrow('Product not found');
+  });
+
+  it('rejeita update do próprio produto setando categoryId de outro tenant', async () => {
+    const u1 = await createTestUser();
+    const u2 = await createTestUser();
+    const p = await ProductService.createProduct(u1.id, { name: 'A' });
+    const catOutro = await createTestCategory(u2.id, 'Cat Alheia');
+    await expect(
+      ProductService.updateProduct(u1.id, p!.id, { categoryId: catOutro.id })
+    ).rejects.toThrow('Categoria não encontrada');
+  });
+
+  it('rejeita update setando supplierId de outro tenant', async () => {
+    const u1 = await createTestUser();
+    const u2 = await createTestUser();
+    const p = await ProductService.createProduct(u1.id, { name: 'A' });
+    const supOutro = await createTestSupplier(u2.id);
+    await expect(
+      ProductService.updateProduct(u1.id, p!.id, { supplierId: supOutro.id })
+    ).rejects.toThrow('Fornecedor não encontrado');
+  });
+
+  it('permite update com categoryId=null (desvincular)', async () => {
+    const user = await createTestUser();
+    const cat = await createTestCategory(user.id);
+    const p = await ProductService.createProduct(user.id, { name: 'A', categoryId: cat.id });
+    const updated = await ProductService.updateProduct(user.id, p!.id, { categoryId: null as any });
+    expect(updated!.categoryId).toBeNull();
   });
 
   it('rejeita update com code duplicado (mesmo tenant) com mensagem clara', async () => {
