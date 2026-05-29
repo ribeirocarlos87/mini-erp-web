@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Phone } from 'lucide-react';
 import {
-  Package, Wrench, ShoppingBag, Home, UtensilsCrossed, Cpu, Pencil,
-  Hammer, Dog, Briefcase, Factory, Beer, FileText, Store, Link2,
-  Smartphone, Building2, BookOpen, Calculator, Laptop,
-  TrendingUp, Eye, BarChart3, Brain, MessageSquare,
-  Instagram, Search, CalendarDays, Globe, Share2, ScanLine,
-  Coins, Scale, MoreHorizontal, Printer, ShoppingCart, Phone,
-  Youtube, Music2, GraduationCap, Headphones, Users, PlayCircle,
-  ListChecks, Compass, MousePointer2,
-} from 'lucide-react';
+  iconPackage, iconControlKnobs, iconShoppingCart, iconLabel,
+  iconDepartmentStore, iconBooks, iconBalanceScale, iconBeatingHeart,
+  iconInboxTray, iconMoneyBag, iconSatellite, iconBank, iconBarChart,
+  iconChartIncreasing, iconCreditCard, iconMagnifyingGlass, iconTrophy,
+  iconPeople,
+} from '../../assets/icons';
 import OptionCard from './OptionCard';
 import styles from './steps.module.css';
-import type { OnboardingPatch, OnboardingState } from '../../services/onboardingService';
+import type { OnboardingPatch } from '../../services/onboardingService';
+
+/** Helper: insere ícone 3D (PNG) como ReactNode dentro do OptionCard. */
+const ico = (src: string) => <img src={src} alt="" width={32} height={32} />;
 
 /* ═══════════ Componentes reutilizáveis ═══════════ */
 
@@ -23,7 +24,7 @@ interface SingleChoiceProps<T extends string> {
 
 export function SingleChoice<T extends string>({ options, value, onChange }: SingleChoiceProps<T>) {
   return (
-    <div className={styles.cardList}>
+    <div className={styles.cardGrid}>
       {options.map((opt) => (
         <OptionCard
           key={opt.value}
@@ -47,7 +48,7 @@ interface MultiChoiceProps<T extends string> {
 export function MultiChoice<T extends string>({ options, values, onToggle }: MultiChoiceProps<T>) {
   const selected = values ?? [];
   return (
-    <div className={styles.cardList}>
+    <div className={styles.cardGrid}>
       {options.map((opt) => (
         <OptionCard
           key={opt.value}
@@ -74,9 +75,7 @@ export const Welcome: React.FC<{ name: string }> = ({ name }) => {
       <p className={styles.welcomeBody}>
         É ótimo ter você a bordo. Vamos deixar o MINI ERP perfeito para o seu tipo de loja.
       </p>
-      <p className={styles.welcomeMeta}>
-        Responda rapidinho — leva menos de 2 minutos.
-      </p>
+      <p className={styles.welcomeMeta}>Responda rapidinho — leva menos de 2 minutos.</p>
       <p className={styles.welcomeFootnote}>
         Usaremos suas respostas para personalizar sua experiência, liberar atalhos importantes
         e montar seu ambiente do jeito certo desde o primeiro acesso.
@@ -102,8 +101,26 @@ interface CnpjStepProps {
 }
 
 export const CnpjStep: React.FC<CnpjStepProps> = ({ value, onChange }) => {
-  const optOut = value === null;
-  const display = value && value.length > 0 ? maskCnpj(value) : '';
+  // Opt-out é estado puramente local: o checkbox SEMPRE começa desmarcado,
+  // mesmo quando state.cnpj é null. "null no DB" pode significar tanto "nunca
+  // preencheu" quanto "opted out" — não dá pra derivar com segurança. User
+  // marca manualmente se não tiver CNPJ.
+  const [optOut, setOptOut] = useState(false);
+
+  const display = !optOut && value && value.length > 0 ? maskCnpj(value) : '';
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digits = e.target.value.replace(/\D/g, '').slice(0, 14);
+    if (optOut) setOptOut(false);
+    onChange(digits);
+  };
+
+  const handleToggleOptOut = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    setOptOut(checked);
+    onChange(checked ? null : '');
+  };
+
   return (
     <div className={styles.formBlock}>
       <input
@@ -112,17 +129,13 @@ export const CnpjStep: React.FC<CnpjStepProps> = ({ value, onChange }) => {
         placeholder="00.000.000/0000-00"
         value={display}
         disabled={optOut}
-        onChange={(e) => onChange(e.target.value.replace(/\D/g, '').slice(0, 14) || '')}
+        onChange={handleTextChange}
         maxLength={18}
         inputMode="numeric"
         autoFocus
       />
       <label className={styles.optOut}>
-        <input
-          type="checkbox"
-          checked={optOut}
-          onChange={(e) => onChange(e.target.checked ? null : '')}
-        />
+        <input type="checkbox" checked={optOut} onChange={handleToggleOptOut} />
         Ainda não possuo CNPJ formalizado
       </label>
     </div>
@@ -151,7 +164,7 @@ export const WhatsappStep: React.FC<WhatsappStepProps> = ({ value, onChange }) =
   return (
     <div className={styles.formBlock}>
       <div className={styles.contactBadge}>
-        <Phone size={24} />
+        <Phone size={18} />
         <span>Suporte rápido durante seu período inicial</span>
       </div>
       <input
@@ -172,25 +185,25 @@ export const WhatsappStep: React.FC<WhatsappStepProps> = ({ value, onChange }) =
   );
 };
 
-/* ═══════════ Opções (15 step configs) ═══════════ */
+/* ═══════════ Opções com ícones 3D ═══════════ */
 
 export const BUSINESS_TYPE_OPTIONS = [
-  { value: 'produtos', label: 'Produtos', description: 'Vendo produtos físicos ou digitais.', icon: <Package size={20} /> },
-  { value: 'servicos', label: 'Serviços', description: 'Presto serviços (manutenção, beleza, consultoria, etc).', icon: <Wrench size={20} /> },
-  { value: 'ambos', label: 'Produtos e Serviços', description: 'Vendo os dois — produtos e serviços.', icon: <ShoppingBag size={20} /> },
+  { value: 'produtos', label: 'Produtos', description: 'Vendo produtos físicos ou digitais.', icon: ico(iconPackage) },
+  { value: 'servicos', label: 'Serviços', description: 'Presto serviços (manutenção, beleza, consultoria).', icon: ico(iconControlKnobs) },
+  { value: 'ambos', label: 'Produtos e Serviços', description: 'Vendo os dois — produtos e serviços.', icon: ico(iconShoppingCart) },
 ] as const;
 
 export const SEGMENT_OPTIONS = [
-  { value: 'moda', label: 'Moda, Beleza e Esportes', icon: <ShoppingBag size={20} /> },
-  { value: 'casa', label: 'Móveis, Casa e Decoração', icon: <Home size={20} /> },
-  { value: 'alimentacao', label: 'Alimentação, Suplementos e Bebidas', icon: <UtensilsCrossed size={20} /> },
-  { value: 'eletronicos', label: 'Eletrônicos, Eletrodomésticos e Automotivos', icon: <Cpu size={20} /> },
-  { value: 'papelaria', label: 'Papelarias, Brinquedos e Bazares', icon: <Pencil size={20} /> },
-  { value: 'construcao', label: 'Materiais de Construção, Ferragens e Ferramentas', icon: <Hammer size={20} /> },
-  { value: 'pet', label: 'Pet Shops, Agropecuárias e Plantas', icon: <Dog size={20} /> },
-  { value: 'servicos', label: 'Prestador de Serviços', icon: <Briefcase size={20} /> },
-  { value: 'industria', label: 'Pequena Indústria', icon: <Factory size={20} /> },
-  { value: 'bar', label: 'Bar e Restaurante', icon: <Beer size={20} /> },
+  { value: 'moda', label: 'Moda, Beleza e Esportes', icon: ico(iconLabel) },
+  { value: 'casa', label: 'Móveis, Casa e Decoração', icon: ico(iconDepartmentStore) },
+  { value: 'alimentacao', label: 'Alimentação e Bebidas', icon: ico(iconShoppingCart) },
+  { value: 'eletronicos', label: 'Eletrônicos e Automotivos', icon: ico(iconControlKnobs) },
+  { value: 'papelaria', label: 'Papelaria, Brinquedos e Bazares', icon: ico(iconBooks) },
+  { value: 'construcao', label: 'Construção e Ferramentas', icon: ico(iconBalanceScale) },
+  { value: 'pet', label: 'Pet Shops e Agropecuárias', icon: ico(iconBeatingHeart) },
+  { value: 'servicos', label: 'Prestador de Serviços', icon: ico(iconControlKnobs) },
+  { value: 'industria', label: 'Pequena Indústria', icon: ico(iconInboxTray) },
+  { value: 'bar', label: 'Bar e Restaurante', icon: ico(iconMoneyBag) },
 ] as const;
 
 export const TAX_REGIME_OPTIONS = [
@@ -202,89 +215,89 @@ export const TAX_REGIME_OPTIONS = [
 ] as const;
 
 export const MULTI_STORE_OPTIONS = [
-  { value: 'unica', label: 'Não, tenho apenas uma loja', description: 'Operação centralizada em um único ponto.' },
-  { value: 'integrada', label: 'Sim, e preciso de gestão integrada', description: 'Múltiplas lojas com estoque e relatórios consolidados.' },
-  { value: 'independente', label: 'Sim, mas cada loja tem gestão independente', description: 'Lojas separadas com gestão própria.' },
+  { value: 'unica', label: 'Apenas uma loja', description: 'Operação centralizada em um único ponto.', icon: ico(iconDepartmentStore) },
+  { value: 'integrada', label: 'Várias lojas, gestão integrada', description: 'Múltiplas lojas com estoque e relatórios consolidados.', icon: ico(iconSatellite) },
+  { value: 'independente', label: 'Várias lojas, gestão independente', description: 'Lojas separadas com gestão própria.', icon: ico(iconControlKnobs) },
 ] as const;
 
 export const SALES_CHANNEL_OPTIONS = [
-  { value: 'fisica', label: 'Loja física', icon: <Store size={20} /> },
-  { value: 'whatsapp', label: 'WhatsApp', icon: <MessageSquare size={20} /> },
-  { value: 'instagram', label: 'Instagram', icon: <Instagram size={20} /> },
-  { value: 'tiktok', label: 'TikTok', icon: <Music2 size={20} /> },
-  { value: 'ecommerce', label: 'E-commerce próprio', icon: <Globe size={20} /> },
-  { value: 'marketplace', label: 'Marketplace', icon: <Link2 size={20} /> },
-  { value: 'outras_redes', label: 'Outras redes sociais', icon: <Share2 size={20} /> },
+  { value: 'fisica', label: 'Loja física', icon: ico(iconDepartmentStore) },
+  { value: 'whatsapp', label: 'WhatsApp', icon: ico(iconPeople) },
+  { value: 'instagram', label: 'Instagram', icon: ico(iconSatellite) },
+  { value: 'tiktok', label: 'TikTok', icon: ico(iconSatellite) },
+  { value: 'ecommerce', label: 'E-commerce próprio', icon: ico(iconShoppingCart) },
+  { value: 'marketplace', label: 'Marketplace', icon: ico(iconBarChart) },
+  { value: 'outras_redes', label: 'Outras redes sociais', icon: ico(iconPeople) },
 ] as const;
 
 export const HEARD_ABOUT_OPTIONS = [
-  { value: 'indicacao', label: 'Indicação de alguém', icon: <Users size={20} /> },
-  { value: 'instagram', label: 'Instagram', icon: <Instagram size={20} /> },
-  { value: 'whatsapp', label: 'Contato pelo WhatsApp', icon: <MessageSquare size={20} /> },
-  { value: 'google', label: 'Buscas no Google / Bing', icon: <Search size={20} /> },
-  { value: 'evento', label: 'Evento ou palestra', icon: <CalendarDays size={20} /> },
-  { value: 'redes_sociais', label: 'Outras redes sociais', icon: <Share2 size={20} /> },
-  { value: 'site', label: 'Li em algum site', icon: <Globe size={20} /> },
-  { value: 'blog', label: 'Blog do MINI ERP', icon: <FileText size={20} /> },
-  { value: 'outro', label: 'Outro', icon: <MoreHorizontal size={20} /> },
+  { value: 'indicacao', label: 'Indicação', icon: ico(iconPeople) },
+  { value: 'instagram', label: 'Instagram', icon: ico(iconSatellite) },
+  { value: 'whatsapp', label: 'WhatsApp', icon: ico(iconPeople) },
+  { value: 'google', label: 'Google / Bing', icon: ico(iconMagnifyingGlass) },
+  { value: 'evento', label: 'Evento ou palestra', icon: ico(iconTrophy) },
+  { value: 'redes_sociais', label: 'Outras redes sociais', icon: ico(iconSatellite) },
+  { value: 'site', label: 'Li em algum site', icon: ico(iconChartIncreasing) },
+  { value: 'blog', label: 'Blog do MINI ERP', icon: ico(iconBooks) },
+  { value: 'outro', label: 'Outro', icon: ico(iconLabel) },
 ] as const;
 
 export const CURRENT_CONTROL_OPTIONS = [
-  { value: 'cabeca', label: 'Na minha cabeça', description: 'Sem registro formal.', icon: <Brain size={20} /> },
-  { value: 'caderno', label: 'Caderno / anotações', description: 'Anotações manuais em papel.', icon: <BookOpen size={20} /> },
-  { value: 'planilha', label: 'Planilha', description: 'Excel, Google Sheets, etc.', icon: <Calculator size={20} /> },
-  { value: 'erp', label: 'Sistema de gestão (ERP)', description: 'Já uso um sistema dedicado.', icon: <Laptop size={20} /> },
+  { value: 'cabeca', label: 'Na minha cabeça', description: 'Sem registro formal.', icon: ico(iconBeatingHeart) },
+  { value: 'caderno', label: 'Caderno / anotações', description: 'Anotações manuais.', icon: ico(iconBooks) },
+  { value: 'planilha', label: 'Planilha', description: 'Excel, Google Sheets.', icon: ico(iconChartIncreasing) },
+  { value: 'erp', label: 'Sistema de gestão', description: 'Já uso um ERP.', icon: ico(iconControlKnobs) },
 ] as const;
 
 export const IMPROVEMENT_GOALS_OPTIONS = [
-  { value: 'financeiro', label: 'Organizar o financeiro', icon: <Calculator size={20} /> },
-  { value: 'estoque', label: 'Controlar melhor o estoque', icon: <Package size={20} /> },
-  { value: 'vender_mais', label: 'Vender mais para os clientes que já tenho', icon: <TrendingUp size={20} /> },
-  { value: 'integracao', label: 'Integrar loja física e canais digitais', icon: <Link2 size={20} /> },
-  { value: 'profissionalizar', label: 'Profissionalizar a operação', icon: <Briefcase size={20} /> },
-  { value: 'numeros', label: 'Entender melhor meus números', icon: <BarChart3 size={20} /> },
+  { value: 'financeiro', label: 'Organizar o financeiro', icon: ico(iconMoneyBag) },
+  { value: 'estoque', label: 'Controlar o estoque', icon: ico(iconPackage) },
+  { value: 'vender_mais', label: 'Vender mais', icon: ico(iconChartIncreasing) },
+  { value: 'integracao', label: 'Integrar canais', icon: ico(iconSatellite) },
+  { value: 'profissionalizar', label: 'Profissionalizar a operação', icon: ico(iconTrophy) },
+  { value: 'numeros', label: 'Entender meus números', icon: ico(iconBarChart) },
 ] as const;
 
 export const EQUIPMENT_OPTIONS = [
-  { value: 'pdv_dedicado', label: 'PC/Notebook/Tablet dedicado ao PDV', icon: <Laptop size={20} /> },
-  { value: 'impressora_termica', label: 'Impressora térmica', icon: <Printer size={20} /> },
-  { value: 'impressora_comum', label: 'Impressora comum', icon: <Printer size={20} /> },
-  { value: 'leitor_barras', label: 'Leitor de código de barras', icon: <ScanLine size={20} /> },
-  { value: 'gaveta', label: 'Gaveta de dinheiro', icon: <Coins size={20} /> },
-  { value: 'balanca', label: 'Balança', icon: <Scale size={20} /> },
-  { value: 'maquininha', label: 'Maquininha de cartão', icon: <ShoppingCart size={20} /> },
-  { value: 'so_celular', label: 'Uso só celular / tablet', icon: <Smartphone size={20} /> },
-  { value: 'nenhum', label: 'Ainda não tenho equipamentos definidos', icon: <FileText size={20} /> },
+  { value: 'pdv_dedicado', label: 'PC/Notebook/Tablet PDV', icon: ico(iconControlKnobs) },
+  { value: 'impressora_termica', label: 'Impressora térmica', icon: ico(iconLabel) },
+  { value: 'impressora_comum', label: 'Impressora comum', icon: ico(iconLabel) },
+  { value: 'leitor_barras', label: 'Leitor de código de barras', icon: ico(iconMagnifyingGlass) },
+  { value: 'gaveta', label: 'Gaveta de dinheiro', icon: ico(iconMoneyBag) },
+  { value: 'balanca', label: 'Balança', icon: ico(iconBalanceScale) },
+  { value: 'maquininha', label: 'Maquininha de cartão', icon: ico(iconCreditCard) },
+  { value: 'so_celular', label: 'Só celular / tablet', icon: ico(iconPeople) },
+  { value: 'nenhum', label: 'Ainda não defini', icon: ico(iconLabel) },
 ] as const;
 
 export const LEARNING_PREFS_OPTIONS = [
-  { value: 'nao_estudo', label: 'Não costumo estudar', icon: <Eye size={20} /> },
-  { value: 'youtube', label: 'YouTube', icon: <Youtube size={20} /> },
-  { value: 'instagram', label: 'Instagram', icon: <Instagram size={20} /> },
-  { value: 'tiktok', label: 'TikTok', icon: <Music2 size={20} /> },
-  { value: 'eventos', label: 'Palestras e eventos', icon: <CalendarDays size={20} /> },
-  { value: 'sebrae', label: 'Sebrae', icon: <Building2 size={20} /> },
-  { value: 'cursos', label: 'Cursos online / mentorias', icon: <GraduationCap size={20} /> },
-  { value: 'podcasts', label: 'Podcasts', icon: <Headphones size={20} /> },
-  { value: 'indicacao', label: 'Indicação de outros lojistas', icon: <Users size={20} /> },
-  { value: 'outros', label: 'Outros', icon: <BookOpen size={20} /> },
+  { value: 'nao_estudo', label: 'Não costumo estudar', icon: ico(iconLabel) },
+  { value: 'youtube', label: 'YouTube', icon: ico(iconSatellite) },
+  { value: 'instagram', label: 'Instagram', icon: ico(iconSatellite) },
+  { value: 'tiktok', label: 'TikTok', icon: ico(iconSatellite) },
+  { value: 'eventos', label: 'Eventos e palestras', icon: ico(iconTrophy) },
+  { value: 'sebrae', label: 'Sebrae', icon: ico(iconBank) },
+  { value: 'cursos', label: 'Cursos / mentorias', icon: ico(iconBooks) },
+  { value: 'podcasts', label: 'Podcasts', icon: ico(iconSatellite) },
+  { value: 'indicacao', label: 'Indicações', icon: ico(iconPeople) },
+  { value: 'outros', label: 'Outros', icon: ico(iconLabel) },
 ] as const;
 
 export const TECH_LEVEL_OPTIONS = [
   { value: 'basico', label: 'Só uso o básico e o que é obrigatório' },
-  { value: 'necessario', label: 'Uso o necessário, sem gostar muito de complicação' },
+  { value: 'necessario', label: 'Uso o necessário, sem complicação' },
   { value: 'curioso', label: 'Gosto de aprender e testar quando vejo valor' },
   { value: 'entusiasta', label: 'Sou entusiasta e gosto de explorar' },
 ] as const;
 
 export const TUTORIAL_PREF_OPTIONS = [
-  { value: 'video', label: 'Ver um vídeo curto', icon: <PlayCircle size={20} /> },
-  { value: 'passo_a_passo', label: 'Ler um passo a passo', icon: <ListChecks size={20} /> },
-  { value: 'tour', label: 'Fazer um tour guiado', icon: <Compass size={20} /> },
-  { value: 'explorar', label: 'Explorar sozinho', icon: <MousePointer2 size={20} /> },
+  { value: 'video', label: 'Ver um vídeo curto', icon: ico(iconChartIncreasing) },
+  { value: 'passo_a_passo', label: 'Ler um passo a passo', icon: ico(iconBooks) },
+  { value: 'tour', label: 'Fazer um tour guiado', icon: ico(iconMagnifyingGlass) },
+  { value: 'explorar', label: 'Explorar sozinho', icon: ico(iconControlKnobs) },
 ] as const;
 
-/* ═══════════ Configuração de cada step ═══════════ */
+/* ═══════════ Configuração dos 15 steps ═══════════ */
 
 export type StepType = 'welcome' | 'cnpj' | 'whatsapp' | 'single' | 'multi';
 
@@ -293,24 +306,18 @@ export interface StepConfig {
   type: StepType;
   title: string;
   subtitle?: string;
-  /** Campo do OnboardingPatch que esse step preenche (não usado em welcome/cnpj/whatsapp). */
   field?: keyof OnboardingPatch;
   options?: ReadonlyArray<{ value: string; label: string; description?: string; icon?: React.ReactNode }>;
-  /** Se true, exige seleção/preenchimento antes de avançar. */
   required?: boolean;
 }
 
 export const STEP_CONFIGS: StepConfig[] = [
-  {
-    id: 'welcome',
-    type: 'welcome',
-    title: 'Bem-vindo ao MINI ERP',
-  },
+  { id: 'welcome', type: 'welcome', title: 'Bem-vindo ao MINI ERP' },
   {
     id: 'cnpj',
     type: 'cnpj',
     title: 'Qual o CNPJ da sua empresa?',
-    subtitle: 'Opcional — se preencher, aceleramos suas configurações fiscais. Sem CNPJ? Marque a opção abaixo e siga em frente.',
+    subtitle: 'Opcional — se preencher, aceleramos suas configurações fiscais. Sem CNPJ? Marque a opção abaixo.',
   },
   {
     id: 'businessType',

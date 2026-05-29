@@ -1,8 +1,29 @@
-/* ─── Lista de cards (radio ou checkbox) ─── */
+/* ─── Grid responsivo de cards ─── */
+/* `auto-fit` faz o grid acomodar quantos cards couberem por linha:
+ *   - Desktop (~720px container): 3 colunas (220 * 3 + gaps)
+ *   - Tablet (~500-720px): 2 colunas
+ *   - Mobile (<500px): 1 coluna automaticamente
+ * Garante que steps com muitas opções (segmento=10, equipamentos=9) caibam
+ * sem scroll na maioria das telas desktop. */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-sm);
+  align-items: stretch;
+}
+
+/* Fallback / legado — alguns lugares ainda referenciam .cardList */
 .cardList {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
+}
+
+/* Em mobile, sempre 1 coluna independente do minmax (cards ficam full-width) */
+@media (max-width: 480px) {
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ─── Bloco de formulário (CNPJ, WhatsApp) ─── */
