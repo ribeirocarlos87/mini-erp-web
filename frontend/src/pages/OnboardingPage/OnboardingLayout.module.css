@@ -52,27 +52,45 @@
 }
 
 /* ─── Conteúdo ─── */
+/* Centralizado horizontalmente (via align-items: center) e verticalmente
+ * (via margin: auto 0 no contentInner — colapsa pra topo se o conteúdo
+ * exceder a altura disponível, mostrando scroll natural). */
 .content {
   flex: 1;
   overflow-y: auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   padding: var(--spacing-xl) var(--spacing-md);
 }
 
-.step {
+.contentInner {
   width: 100%;
-  max-width: 720px;
+  max-width: 560px;
+  margin: auto 0;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.titleBlock {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
 .title {
   font-size: var(--font-size-2xl);
   font-weight: 700;
   color: var(--color-slate-900);
-  line-height: 1.2;
+  line-height: 1.25;
   margin: 0;
 }
 
@@ -97,6 +115,7 @@
   color: var(--color-error);
   font-size: var(--font-size-sm);
   font-weight: 500;
+  text-align: center;
 }
 
 /* ─── Footer ─── */
@@ -108,6 +127,7 @@
   background: var(--color-white);
   border-top: 1px solid var(--color-slate-200);
   flex-shrink: 0;
+  gap: var(--spacing-md);
 }
 
 .spacer {
@@ -127,6 +147,7 @@
   cursor: pointer;
   transition: var(--transition-base);
   border: none;
+  white-space: nowrap;
 }
 
 .backBtn {
@@ -160,12 +181,8 @@
   box-shadow: none;
 }
 
-/* ─── Mobile ─── */
-@media (max-width: 640px) {
-  .header {
-    padding: var(--spacing-sm) var(--spacing-md);
-  }
-
+/* ─── Tablet (até 768px) ─── */
+@media (max-width: 768px) {
   .content {
     padding: var(--spacing-lg) var(--spacing-md);
   }
@@ -174,8 +191,46 @@
     font-size: var(--font-size-xl);
   }
 
+  .subtitle {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* ─── Mobile (até 640px) ─── */
+@media (max-width: 640px) {
+  .header {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .brandText {
+    font-size: var(--font-size-sm);
+  }
+
+  .stepCounter {
+    font-size: var(--font-size-xs);
+  }
+
+  .content {
+    padding: var(--spacing-md);
+  }
+
+  .contentInner {
+    gap: var(--spacing-md);
+  }
+
+  .titleBlock {
+    text-align: left;
+  }
+
   .footer {
     padding: var(--spacing-sm) var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
+
+  .backBtn,
+  .nextBtn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
   }
 
   .nextBtn {

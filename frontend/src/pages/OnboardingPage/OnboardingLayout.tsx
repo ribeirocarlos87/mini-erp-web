@@ -68,23 +68,27 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
         />
       </div>
 
-      {/* Conteúdo do step */}
+      {/* Conteúdo do step — centralizado horizontal e verticalmente */}
       <main className={styles.content}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentStep}
-            className={styles.step}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.25 }}
-          >
-            <h1 className={styles.title}>{title}</h1>
-            {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
-            {error && <div className={styles.error}>{error}</div>}
-            <div className={styles.body}>{children}</div>
-          </motion.div>
-        </AnimatePresence>
+        <div className={styles.contentInner}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              className={styles.step}
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -16 }}
+              transition={{ duration: 0.22 }}
+            >
+              <div className={styles.titleBlock}>
+                <h1 className={styles.title}>{title}</h1>
+                {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+              </div>
+              {error && <div className={styles.error}>{error}</div>}
+              <div className={styles.body}>{children}</div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </main>
 
       {/* Footer com navegação */}

@@ -8,16 +8,15 @@ import {
 } from '../../services/onboardingService';
 import OnboardingLayout from './OnboardingLayout';
 import {
-  StepWelcome,
-  StepCompany,
-  StepOperation,
-  StepToday,
-  StepGoals,
-  StepAboutYou,
-  StepContact,
+  Welcome,
+  CnpjStep,
+  WhatsappStep,
+  SingleChoice,
+  MultiChoice,
+  STEP_CONFIGS,
+  TOTAL_STEPS,
+  StepConfig,
 } from './steps';
-
-const TOTAL_STEPS = 7;
 
 const EMPTY_STATE: OnboardingState = {
   completed: false,
@@ -38,19 +37,58 @@ const EMPTY_STATE: OnboardingState = {
   whatsapp: null,
 };
 
+function readValue<T>(field: keyof OnboardingPatch, draft: OnboardingPatch, state: OnboardingState): T | null {
+  const fromDraft = (draft as any)[field];
+  if (fromDraft !== undefined) return fromDraft;
+  return ((state as any)[field] ?? null) as T | null;
+}
+
+function readArray(field: keyof OnboardingPatch, draft: OnboardingPatch, state: OnboardingState): string[] {
+  const fromDraft = (draft as any)[field];
+  if (fromDraft !== undefined) return fromDraft;
+  return ((state as any)[field] ?? []) as string[];
+}
+
+function toggleInArray(arr: string[], value: string): string[] {
+  return arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
+}
+
+function validateStep(
+  step: StepConfig,
+  draft: OnboardingPatch,
+  state: OnboardingState
+): string | null {
+  if (step.type === 'welcome') return null;
+  if (step.type === 'cnpj') return null;
+  if (step.type === 'whatsapp') {
+    const w = (draft.whatsapp ?? state.whatsapp ?? '') as string;
+    if (!/^\d{10,11}$/.test(w)) return 'Informe um WhatsApp válido com DDD.';
+    return null;
+  }
+  if (!step.required) return null;
+  if (step.type === 'single') {
+    const v = readValue(step.field!, draft, state);
+    if (!v) return 'Selecione uma opção para continuar.';
+  }
+  if (step.type === 'multi') {
+    const arr = readArray(step.field!, draft, state);
+    if (arr.length === 0) return 'Selecione ao menos uma opção.';
+  }
+  return null;
+}
+
 const OnboardingPage: React.FC = () => {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const markOnboardingComplete = useAuthStore((s) => s.markOnboardingComplete);
 
-  const [step, setStep] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0);
   const [state, setState] = useState<OnboardingState>(EMPTY_STATE);
   const [draft, setDraft] = useState<OnboardingPatch>({});
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
 
-  // Carrega estado atual ao montar — usuário pode estar retomando o wizard.
   useEffect(() => {
     let active = true;
     onboardingService
@@ -58,7 +96,6 @@ const OnboardingPage: React.FC = () => {
       .then((s) => {
         if (!active) return;
         if (s.completed) {
-          // Já completou — não deveria estar aqui. Redireciona.
           navigate('/dashboard', { replace: true });
           return;
         }
@@ -73,14 +110,14 @@ const OnboardingPage: React.FC = () => {
     };
   }, [navigate]);
 
-  const patch = (changes: Partial<OnboardingPatch>) => {
+  const step = STEP_CONFIGS[stepIndex];
+
+  function patch(changes: Partial<OnboardingPatch>) {
     setDraft((prev) => ({ ...prev, ...changes }));
     setError(null);
-  };
+  }
 
-  // Aplica a parte do draft do step atual no backend e em `state` local;
-  // limpa o draft para o próximo step ficar partindo do estado salvo.
-  async function saveProgress() {
+  async function saveProgress(): Promise<OnboardingState> {
     if (Object.keys(draft).length === 0) return state;
     setSaving(true);
     setError(null);
@@ -101,62 +138,19 @@ const OnboardingPage: React.FC = () => {
     }
   }
 
-  function validateCurrentStep(currentState: OnboardingState, currentDraft: OnboardingPatch): string | null {
-    // Validações leves de UX — backend valida de novo no /complete.
-    // Step 0 (welcome): nada a validar.
-    // Step 1 (Sua empresa): pede businessType e segment.
-    // Step 2 (Operação): pede multiStore.
-    // Step 3 (Hoje): pede currentControl.
-    // Step 4 (Objetivos): nenhum obrigatório (mas sugerir 1).
-    // Step 5 (Sobre você): pede techLevel e tutorialPref.
-    // Step 6 (Contato): pede whatsapp com 10-11 dígitos.
-    const v = <K extends keyof OnboardingPatch>(k: K) =>
-      (currentDraft[k] ?? (currentState as any)[k]) as OnboardingPatch[K];
-    switch (step) {
-      case 0:
-        return null;
-      case 1:
-        if (!v('businessType')) return 'Selecione o que sua empresa vende.';
-        if (!v('segment')) return 'Selecione o segmento da sua loja.';
-        return null;
-      case 2:
-        if (!v('multiStore')) return 'Selecione a opção de multi-loja.';
-        return null;
-      case 3:
-        if (!v('currentControl')) return 'Selecione como você controla sua loja hoje.';
-        return null;
-      case 4:
-        return null;
-      case 5:
-        if (!v('techLevel')) return 'Selecione seu nível de experiência com tecnologia.';
-        if (!v('tutorialPref')) return 'Selecione como prefere aprender o sistema.';
-        return null;
-      case 6: {
-        const w = (v('whatsapp') as string | undefined) || '';
-        if (!/^\d{10,11}$/.test(w)) return 'Informe um WhatsApp válido (DDD + número).';
-        return null;
-      }
-      default:
-        return null;
-    }
-  }
-
   async function handleNext() {
-    const validationMsg = validateCurrentStep(state, draft);
-    if (validationMsg) {
-      setError(validationMsg);
+    const msg = validateStep(step, draft, state);
+    if (msg) {
+      setError(msg);
       return;
     }
     try {
       const updated = await saveProgress();
-      if (step === TOTAL_STEPS - 1) {
-        // Último step — finaliza.
+      if (stepIndex === TOTAL_STEPS - 1) {
         setSaving(true);
         try {
           const finalState = await onboardingService.complete({});
-          if (finalState.completedAt) {
-            markOnboardingComplete(finalState.completedAt);
-          }
+          if (finalState.completedAt) markOnboardingComplete(finalState.completedAt);
           navigate('/dashboard', { replace: true });
         } catch (err: any) {
           setError(
@@ -167,19 +161,18 @@ const OnboardingPage: React.FC = () => {
           setSaving(false);
         }
       } else {
-        // Mantém o `updated` no state — próximo step parte dele.
         if (updated) setState(updated);
-        setStep(step + 1);
+        setStepIndex(stepIndex + 1);
       }
     } catch {
-      /* erro já foi tratado em saveProgress */
+      /* erro tratado em saveProgress */
     }
   }
 
   function handleBack() {
     setError(null);
     setDraft({});
-    setStep(Math.max(0, step - 1));
+    setStepIndex(Math.max(0, stepIndex - 1));
   }
 
   if (!initialized) {
@@ -194,64 +187,67 @@ const OnboardingPage: React.FC = () => {
     );
   }
 
-  const titles = [
-    'Bem-vindo ao MINI ERP',
-    'Sua empresa',
-    'Sua operação',
-    'Como você opera hoje',
-    'Seus objetivos',
-    'Sobre você',
-    'Tudo pronto!',
-  ];
-
-  const subtitles: (string | undefined)[] = [
-    undefined,
-    'Conte sobre o negócio para liberarmos os recursos certos.',
-    'Como você vende hoje?',
-    'Pra adaptar a experiência ao seu cenário atual.',
-    'O que faz sentido pra sua loja agora.',
-    'Pra ajustar o ritmo da sua jornada.',
-    'Falta só uma informação pra liberar seu acesso.',
-  ];
-
-  const renderStep = () => {
-    const stepProps = { draft, state, patch };
-    switch (step) {
-      case 0:
-        return <StepWelcome name={user?.name || ''} />;
-      case 1:
-        return <StepCompany {...stepProps} />;
-      case 2:
-        return <StepOperation {...stepProps} />;
-      case 3:
-        return <StepToday {...stepProps} />;
-      case 4:
-        return <StepGoals {...stepProps} />;
-      case 5:
-        return <StepAboutYou {...stepProps} />;
-      case 6:
-        return <StepContact {...stepProps} />;
-      default:
-        return null;
+  function renderStepBody() {
+    if (step.type === 'welcome') {
+      return <Welcome name={user?.name || ''} />;
     }
-  };
+    if (step.type === 'cnpj') {
+      return (
+        <CnpjStep
+          value={draft.cnpj !== undefined ? draft.cnpj : state.cnpj}
+          onChange={(v) => patch({ cnpj: v })}
+        />
+      );
+    }
+    if (step.type === 'whatsapp') {
+      return (
+        <WhatsappStep
+          value={draft.whatsapp ?? state.whatsapp}
+          onChange={(digits) => patch({ whatsapp: digits })}
+        />
+      );
+    }
+    if (step.type === 'single') {
+      const field = step.field!;
+      return (
+        <SingleChoice
+          options={step.options as any}
+          value={readValue<string>(field, draft, state)}
+          onChange={(v) => patch({ [field]: v } as any)}
+        />
+      );
+    }
+    if (step.type === 'multi') {
+      const field = step.field!;
+      const values = readArray(field, draft, state);
+      return (
+        <MultiChoice
+          options={step.options as any}
+          values={values}
+          onToggle={(v) => patch({ [field]: toggleInArray(values, v) } as any)}
+        />
+      );
+    }
+    return null;
+  }
 
-  const nextLabel = step === 0 ? 'Começar' : step === TOTAL_STEPS - 1 ? 'Concluir e acessar' : 'Continuar';
+  const nextLabel =
+    step.type === 'welcome' ? 'Começar' : stepIndex === TOTAL_STEPS - 1 ? 'Concluir e acessar' : 'Continuar';
 
   return (
     <OnboardingLayout
-      title={titles[step]}
-      subtitle={subtitles[step]}
-      currentStep={step}
+      title={step.title}
+      subtitle={step.subtitle}
+      currentStep={stepIndex}
       totalSteps={TOTAL_STEPS}
-      onBack={step > 0 ? handleBack : undefined}
+      onBack={stepIndex > 0 ? handleBack : undefined}
       onNext={handleNext}
       nextLabel={nextLabel}
       saving={saving}
-      hideBack={step === 0}
+      hideBack={stepIndex === 0}
       error={error}
     >
-      {renderStep()}
+      {renderStepBody()}
     </OnboardingLayout>
   );
 };

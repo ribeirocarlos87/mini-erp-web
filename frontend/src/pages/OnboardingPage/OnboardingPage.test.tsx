@@ -66,34 +66,44 @@ const renderPage = () =>
   );
 
 describe('OnboardingPage', () => {
-  it('renderiza step de boas-vindas com primeiro nome do user', async () => {
+  it('renderiza welcome com primeiro nome do user e contador "Passo 1 de 15"', async () => {
     renderPage();
     expect(await screen.findByText(/Olá, Pedro!/)).toBeInTheDocument();
     expect(screen.getByText('Bem-vindo ao MINI ERP')).toBeInTheDocument();
-    expect(screen.getByText('Passo 1 de 7')).toBeInTheDocument();
+    expect(screen.getByText('Passo 1 de 15')).toBeInTheDocument();
   });
 
-  it('avança do welcome para "Sua empresa" ao clicar em "Começar"', async () => {
+  it('avança do welcome para o step de CNPJ ao clicar em "Começar"', async () => {
     const user = userEvent.setup();
     renderPage();
     await screen.findByText(/Olá, Pedro!/);
 
     await user.click(screen.getByRole('button', { name: /Começar/i }));
 
-    expect(await screen.findByText('Sua empresa')).toBeInTheDocument();
-    expect(screen.getByText('Passo 2 de 7')).toBeInTheDocument();
+    expect(await screen.findByText('Qual o CNPJ da sua empresa?')).toBeInTheDocument();
+    expect(screen.getByText('Passo 2 de 15')).toBeInTheDocument();
   });
 
-  it('botão "Continuar" exibe erro de validação se campos obrigatórios faltam', async () => {
+  it('avança CNPJ → step "O que vende" mesmo sem preencher CNPJ (opcional)', async () => {
     const user = userEvent.setup();
     renderPage();
     await screen.findByText(/Olá, Pedro!/);
     await user.click(screen.getByRole('button', { name: /Começar/i }));
-    // Está no step "Sua empresa" — sem selecionar nada, tenta continuar
+    await screen.findByText('Qual o CNPJ da sua empresa?');
     await user.click(screen.getByRole('button', { name: /Continuar/i }));
-    expect(await screen.findByText(/Selecione o que sua empresa vende/i)).toBeInTheDocument();
-    // updatePartial nem foi chamado porque validação client-side bloqueou
-    expect(onboardingService.updatePartial).not.toHaveBeenCalled();
+    expect(await screen.findByText('O que sua empresa vende hoje?')).toBeInTheDocument();
+  });
+
+  it('step single-choice obrigatório bloqueia "Continuar" sem seleção', async () => {
+    const user = userEvent.setup();
+    renderPage();
+    await screen.findByText(/Olá, Pedro!/);
+    await user.click(screen.getByRole('button', { name: /Começar/i }));
+    await screen.findByText('Qual o CNPJ da sua empresa?');
+    await user.click(screen.getByRole('button', { name: /Continuar/i }));
+    // Agora está em "O que sua empresa vende?" (required). Tenta continuar sem selecionar.
+    await user.click(screen.getByRole('button', { name: /Continuar/i }));
+    expect(await screen.findByText(/Selecione uma opção para continuar/i)).toBeInTheDocument();
   });
 
   it('se GET retorna completed=true, redireciona para /dashboard', async () => {
@@ -111,7 +121,7 @@ describe('OnboardingPage', () => {
     renderPage();
     await screen.findByText(/Olá, Pedro!/);
     await user.click(screen.getByRole('button', { name: /Começar/i }));
-    expect(await screen.findByText('Sua empresa')).toBeInTheDocument();
+    expect(await screen.findByText('Qual o CNPJ da sua empresa?')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Voltar/i }));
     expect(await screen.findByText(/Olá, Pedro!/)).toBeInTheDocument();
   });
