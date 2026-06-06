@@ -10,6 +10,8 @@ import EstoquePage from './pages/EstoquePage';
 import PDVPage from './pages/PDVPage';
 import SalesAndClientsPage from './pages/SalesAndClientsPage';
 import BlankPage from './pages/BlankPage';
+import ConfiguracoesPage from './pages/ConfiguracoesPage/ConfiguracoesPage';
+import { useSettingsStore } from './store/settingsStore';
 import CadastrarClientePage from './pages/CadastrarClientePage';
 import ListaClientesPage from './pages/ListaClientesPage';
 import VerClientePage from './pages/VerClientePage';
@@ -113,8 +115,15 @@ const ProtectedLayout: React.FC<{ children: React.ReactNode; isInitializing: boo
 function App() {
   const [isInitializing, setIsInitializing] = useState(true);
 
+  const { theme, primaryColor } = useSettingsStore.getState();
+
   useEffect(() => {
     setIsInitializing(false);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.style.setProperty('--color-primary', primaryColor);
   }, []);
 
   return (
@@ -157,7 +166,7 @@ function App() {
           <Route path="/relatorios/clientes" element={<ProtectedLayout isInitializing={isInitializing}><ClientesReport /></ProtectedLayout>} />
           <Route path="/relatorios/ciclo-vida" element={<ProtectedLayout isInitializing={isInitializing}><CicloVidaReport /></ProtectedLayout>} />
           <Route path="/relatorios/credito-clientes" element={<ProtectedLayout isInitializing={isInitializing}><CreditoClientesReport /></ProtectedLayout>} />
-          <Route path="/configuracoes" element={<ProtectedLayout isInitializing={isInitializing}><BlankPage title="Configurações" /></ProtectedLayout>} />
+          <Route path="/configuracoes" element={<ProtectedLayout isInitializing={isInitializing}><ConfiguracoesPage /></ProtectedLayout>} />
           <Route path="/" element={<Navigate to="/dashboard" />} />
         </Routes>
       </SidebarProvider>
