@@ -1,0 +1,271 @@
+.page {
+  padding: 24px;
+}
+
+.header {
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.header p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border, #e2e8f0);
+  margin: 12px 0;
+}
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted, #94a3b8);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 8px;
+}
+
+.field {
+  margin-bottom: 10px;
+}
+
+.fieldLabel {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.input {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--bg-input, #f8fafc);
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary, #3b82f6);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btnPrimary {
+  padding: 7px 14px;
+  background: var(--color-primary, #3b82f6);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnPrimary:hover {
+  opacity: 0.9;
+}
+
+.btnSecondary {
+  padding: 7px 14px;
+  background: var(--bg-secondary, #f1f5f9);
+  color: var(--text-secondary);
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.errorMsg {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 4px;
+}
+
+.successMsg {
+  font-size: 12px;
+  color: #10b981;
+  margin-top: 4px;
+}
+
+.gridTwo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.uploadArea {
+  border: 1px dashed var(--border, #cbd5e1);
+  border-radius: 4px;
+  padding: 12px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  background: var(--bg-input, #f8fafc);
+}
+
+.logoPreview {
+  max-height: 60px;
+  max-width: 120px;
+  object-fit: contain;
+  margin-top: 8px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: var(--bg-secondary, #f8fafc);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.rowInfo h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+}
+
+.rowInfo p {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.toggle {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.toggleOn {
+  background: var(--color-primary, #3b82f6);
+}
+
+.toggleOff {
+  background: var(--border, #cbd5e1);
+}
+
+.toggleKnob {
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  transition: left 0.2s;
+}
+
+.toggleKnobOn {
+  left: 19px;
+}
+
+.toggleKnobOff {
+  left: 3px;
+}
+
+.themeButtons {
+  display: flex;
+  gap: 6px;
+}
+
+.themeBtn {
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border, #e2e8f0);
+  cursor: pointer;
+}
+
+.themeBtnActive {
+  background: var(--color-primary, #3b82f6);
+  color: #fff;
+  border-color: var(--color-primary, #3b82f6);
+}
+
+.themeBtnInactive {
+  background: var(--bg-secondary, #f1f5f9);
+  color: var(--text-secondary);
+}
+
+.colorPalette {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.colorSwatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.colorSwatchActive {
+  border-color: var(--text-primary, #0f172a);
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--text-muted, #94a3b8);
+  margin-top: 8px;
+}
