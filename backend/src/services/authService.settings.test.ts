@@ -23,7 +23,7 @@ describe('AuthService.updateProfile', () => {
     const { user: b } = await AuthService.registerUser('B', 'b@test.local', 'senha123');
     await expect(
       AuthService.updateProfile(b.id, { name: 'B', email: 'a@test.local' })
-    ).rejects.toThrow(AppError);
+    ).rejects.toMatchObject({ status: 409 });
   });
 });
 
@@ -41,6 +41,12 @@ describe('AuthService.updatePassword', () => {
     const { user } = await AuthService.registerUser('User', 'u@test.local', 'senhaAntiga');
     await expect(
       AuthService.updatePassword(user.id, { currentPassword: 'errada', newPassword: 'senhaNova' })
-    ).rejects.toThrow(AppError);
+    ).rejects.toMatchObject({ status: 401 });
+  });
+
+  it('throws 404 when user does not exist', async () => {
+    await expect(
+      AuthService.updatePassword(99999, { currentPassword: 'pass', newPassword: 'newpass' })
+    ).rejects.toMatchObject({ status: 404 });
   });
 });
