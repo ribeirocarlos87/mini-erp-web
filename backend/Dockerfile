@@ -1,11 +1,13 @@
 FROM node:18-alpine
 
-RUN apk add --no-cache openssl
+RUN apk add --no-cache openssl python3 make g++
 
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci --ignore-scripts
+COPY prisma ./prisma
+
+RUN npm ci
 
 COPY . .
 
