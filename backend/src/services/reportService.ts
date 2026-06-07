@@ -1,5 +1,7 @@
 import prisma from '../db/prismaClient';
 
+type ReportRow = { id: number | string; col1: string | number | Date; col2?: string | number; col3?: string | number; col4?: string | number; col5?: string | number; col6?: string | number; col7?: string | number; col8?: string | number };
+
 function parseDateRange(dateFrom?: string, dateTo?: string) {
   const range: any = {};
   if (dateFrom) range.gte = new Date(dateFrom);
@@ -13,7 +15,7 @@ function parseDateRange(dateFrom?: string, dateTo?: string) {
 
 export class ReportService {
   /* ─── 1. Vendas (com agrupamento) ─── */
-  static async salesReport(userId: number, dateFrom?: string, dateTo?: string, groupBy: string = 'sale') {
+  static async salesReport(userId: number, dateFrom?: string, dateTo?: string, groupBy: string = 'sale'): Promise<{ summary: Record<string, number>; groupBy: string; columns: string[]; rows: ReportRow[] }> {
     const dateRange = parseDateRange(dateFrom, dateTo);
     const where: any = { userId };
     if (dateRange) where.saleDate = dateRange;
