@@ -4,6 +4,7 @@
   "description": "Mini ERP backend for small retailers",
   "main": "dist/server.js",
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "ts-node src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
