@@ -64,8 +64,8 @@ describe('SignupForm', () => {
     expect(await screen.findByText('A senha deve ter no mínimo 6 caracteres')).toBeInTheDocument();
   });
 
-  it('chama register e navega para /dashboard em sucesso', async () => {
-    mockedRegister.mockResolvedValue({ user: { id: 1, email: 'a@b.com', name: 'A' }, token: 'tk' });
+  it('navega para /onboarding quando onboardingCompletedAt é null (novo usuário)', async () => {
+    mockedRegister.mockResolvedValue({ user: { id: 1, email: 'a@b.com', name: 'A', onboardingCompletedAt: null }, token: 'tk' });
     const user = userEvent.setup();
     renderForm();
     await user.type(screen.getByLabelText('Nome Completo'), 'João');
@@ -77,6 +77,19 @@ describe('SignupForm', () => {
     await waitFor(() =>
       expect(mockedRegister).toHaveBeenCalledWith('João', 'joao@test.com', 'senha123')
     );
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/onboarding'));
+  });
+
+  it('navega para /dashboard quando onboardingCompletedAt já está preenchido', async () => {
+    mockedRegister.mockResolvedValue({ user: { id: 1, email: 'a@b.com', name: 'A', onboardingCompletedAt: '2026-01-01T00:00:00Z' }, token: 'tk' });
+    const user = userEvent.setup();
+    renderForm();
+    await user.type(screen.getByLabelText('Nome Completo'), 'João');
+    await user.type(screen.getByLabelText('Email'), 'joao@test.com');
+    await user.type(screen.getByLabelText('Senha'), 'senha123');
+    await user.type(screen.getByLabelText('Confirmar'), 'senha123');
+    await user.click(screen.getByRole('button', { name: 'Criar conta' }));
+
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/dashboard'));
   });
 
