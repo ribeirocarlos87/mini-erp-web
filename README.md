@@ -241,7 +241,7 @@ graph TB
     FP -.usa.-> happydom
 ```
 
-**Total: 629 testes (577 passando), ~55 segundos.**
+**Total: 629 testes (629 passando), ~55 segundos.**
 
 ### Estratégia
 
@@ -459,4 +459,4 @@ Projeto desenvolvido no curso de Análise e Desenvolvimento de Sistemas — Cent
 
 ---
 
-**Status atual**: PDV completo · Devoluções com saldo de crédito · 12 relatórios · 577 testes passando · CI configurada
+**Status atual**: PDV completo · Devoluções com saldo de crédito · 12 relatórios · 629 testes passando · CI configurada
