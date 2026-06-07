@@ -59,6 +59,38 @@ export class AuthService {
     };
   }
 
+  static async updateProfile(userId: number, data: { name: string; email: string }) {
+    const existing = await prisma.user.findFirst({
+      where: { email: data.email, NOT: { id: userId } },
+    });
+    if (existing) {
+      throw new AppError('Email já está em uso por outro usuário', 409);
+    }
+    const updated = await prisma.user.update({
+      where: { id: userId },
+      data: { name: data.name, email: data.email },
+      select: { id: true, email: true, name: true },
+    });
+    return updated;
+  }
+
+  static async updatePassword(
+    userId: number,
+    data: { currentPassword: string; newPassword: string }
+  ) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new AppError('Usuário não encontrado', 404);
+
+    const match = await bcrypt.compare(data.currentPassword, user.passwordHash);
+    if (!match) throw new AppError('Senha atual incorreta', 401);
+
+    const newHash = await bcrypt.hash(data.newPassword, 10);
+    await prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash: newHash },
+    });
+  }
+
   static async loginUser(email: string, password: string) {
     const user = await prisma.user.findUnique({ where: { email } });
 

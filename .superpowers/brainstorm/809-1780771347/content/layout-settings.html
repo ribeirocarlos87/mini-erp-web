@@ -1,0 +1,93 @@
+<h2>Qual layout você prefere para a página de Configurações?</h2>
+<p class="subtitle">Escolha a estrutura que melhor se encaixa no ERP</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;height:220px;gap:0;font-size:11px;font-family:monospace;">
+        <div style="width:160px;background:#1e293b;color:#94a3b8;padding:12px 8px;flex-shrink:0;">
+          <div style="color:#f8fafc;font-weight:700;margin-bottom:12px;font-size:12px;">⚙ Configurações</div>
+          <div style="background:#334155;color:#f1f5f9;padding:6px 8px;border-radius:4px;margin-bottom:4px;">👤 Minha Conta</div>
+          <div style="padding:6px 8px;margin-bottom:4px;color:#94a3b8;">🏢 Empresa</div>
+          <div style="padding:6px 8px;margin-bottom:4px;color:#94a3b8;">🔐 Segurança</div>
+          <div style="padding:6px 8px;margin-bottom:4px;color:#94a3b8;">🔔 Notificações</div>
+        </div>
+        <div style="flex:1;background:#f8fafc;padding:16px;">
+          <div style="font-weight:700;color:#0f172a;margin-bottom:8px;font-size:13px;">Minha Conta</div>
+          <div style="background:#e2e8f0;height:12px;border-radius:3px;margin-bottom:6px;width:80%"></div>
+          <div style="background:#e2e8f0;height:12px;border-radius:3px;margin-bottom:6px;width:60%"></div>
+          <div style="background:#e2e8f0;height:12px;border-radius:3px;margin-bottom:16px;width:70%"></div>
+          <div style="background:#3b82f6;color:#fff;padding:5px 12px;border-radius:4px;display:inline-block;font-size:11px;">Salvar</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Sidebar + Conteúdo</h3>
+      <p>Menu lateral fixo com seções. Navegação clara, bastante espaço para formulários. Padrão em ERPs maduros.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;flex-direction:column;height:220px;gap:0;font-size:11px;font-family:monospace;">
+        <div style="background:#1e293b;color:#94a3b8;padding:8px 16px;display:flex;gap:16px;align-items:center;">
+          <span style="color:#f8fafc;font-weight:700;">⚙ Configurações</span>
+          <span style="background:#334155;color:#f1f5f9;padding:4px 10px;border-radius:20px;">Minha Conta</span>
+          <span style="padding:4px 10px;color:#94a3b8;">Empresa</span>
+          <span style="padding:4px 10px;color:#94a3b8;">Segurança</span>
+          <span style="padding:4px 10px;color:#94a3b8;">Notificações</span>
+        </div>
+        <div style="flex:1;background:#f8fafc;padding:16px;">
+          <div style="font-weight:700;color:#0f172a;margin-bottom:8px;font-size:13px;">Minha Conta</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="background:#e2e8f0;height:12px;border-radius:3px;"></div>
+            <div style="background:#e2e8f0;height:12px;border-radius:3px;"></div>
+            <div style="background:#e2e8f0;height:12px;border-radius:3px;"></div>
+            <div style="background:#e2e8f0;height:12px;border-radius:3px;"></div>
+          </div>
+          <div style="margin-top:12px;background:#3b82f6;color:#fff;padding:5px 12px;border-radius:4px;display:inline-block;font-size:11px;">Salvar</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Abas Horizontais</h3>
+      <p>Tabs no topo da página. Mais compacto, consistente com padrões de apps web modernos. Menos espaço para nav.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;flex-direction:column;height:220px;gap:8px;font-size:11px;font-family:monospace;background:#f8fafc;padding:16px;">
+        <div style="font-weight:700;color:#0f172a;font-size:13px;">⚙ Configurações</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;">
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:10px;">
+            <div style="font-weight:700;color:#1e293b;margin-bottom:6px;">👤 Minha Conta</div>
+            <div style="background:#e2e8f0;height:8px;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="background:#e2e8f0;height:8px;border-radius:2px;width:70%"></div>
+          </div>
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:10px;">
+            <div style="font-weight:700;color:#1e293b;margin-bottom:6px;">🏢 Empresa</div>
+            <div style="background:#e2e8f0;height:8px;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="background:#e2e8f0;height:8px;border-radius:2px;width:60%"></div>
+          </div>
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:10px;">
+            <div style="font-weight:700;color:#1e293b;margin-bottom:6px;">🔐 Segurança</div>
+            <div style="background:#e2e8f0;height:8px;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="background:#e2e8f0;height:8px;border-radius:2px;width:80%"></div>
+          </div>
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:10px;">
+            <div style="font-weight:700;color:#1e293b;margin-bottom:6px;">🔔 Notificações</div>
+            <div style="background:#e2e8f0;height:8px;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="background:#e2e8f0;height:8px;border-radius:2px;width:55%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Cards de Seção</h3>
+      <p>Todas as seções visíveis de uma vez em cards. Ótimo para configurações simples, sem sub-navegação.</p>
+    </div>
+  </div>
+
+</div>

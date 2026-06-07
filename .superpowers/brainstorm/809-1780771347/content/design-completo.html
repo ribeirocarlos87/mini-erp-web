@@ -1,0 +1,151 @@
+<h2>Design completo — Página de Configurações</h2>
+<p class="subtitle">Layout cards de seção com 4 cards. Clique para ver detalhes de cada um.</p>
+
+<div class="mockup">
+  <div class="mockup-header">ConfiguraçõesPage — visão geral</div>
+  <div class="mockup-body">
+
+    <!-- Page header -->
+    <div style="padding:20px 24px 0;border-bottom:1px solid #e2e8f0;margin-bottom:24px;">
+      <h1 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 4px;">Configurações</h1>
+      <p style="font-size:13px;color:#64748b;margin:0 0 16px;">Gerencie suas preferências e dados do sistema</p>
+    </div>
+
+    <!-- Cards grid -->
+    <div style="padding:0 24px 24px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+      <!-- Card 1: Minha Conta -->
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span style="font-size:18px;">👤</span>
+          <span style="font-weight:700;color:#0f172a;font-size:14px;">Minha Conta</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">
+          <div>
+            <div style="font-size:11px;color:#64748b;margin-bottom:3px;">Nome</div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px 10px;font-size:12px;color:#0f172a;">Carlos Bordignon</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#64748b;margin-bottom:3px;">E-mail</div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px 10px;font-size:12px;color:#0f172a;">carlos@empresa.com</div>
+          </div>
+          <div style="border-top:1px solid #f1f5f9;padding-top:10px;">
+            <div style="font-size:10px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Segurança</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px 10px;font-size:12px;color:#94a3b8;">Senha atual</div>
+              <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px 10px;font-size:12px;color:#94a3b8;">Nova senha</div>
+              <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px 10px;font-size:12px;color:#94a3b8;">Confirmar nova senha</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div style="background:#3b82f6;color:#fff;padding:5px 12px;border-radius:4px;font-size:11px;font-weight:600;">Salvar dados</div>
+          <div style="background:#f1f5f9;color:#475569;padding:5px 12px;border-radius:4px;font-size:11px;font-weight:600;">Alterar senha</div>
+        </div>
+      </div>
+
+      <!-- Card 2: Dados da Empresa -->
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span style="font-size:18px;">🏢</span>
+          <span style="font-weight:700;color:#0f172a;font-size:14px;">Dados da Empresa</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div style="grid-column:1/-1;">
+            <div style="font-size:11px;color:#64748b;margin-bottom:3px;">Nome / Razão Social</div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px 10px;font-size:12px;color:#0f172a;">Minha Empresa Ltda</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#64748b;margin-bottom:3px;">CNPJ</div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px 10px;font-size:12px;color:#94a3b8;">00.000.000/0001-00</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#64748b;margin-bottom:3px;">Telefone</div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px 10px;font-size:12px;color:#94a3b8;">(00) 00000-0000</div>
+          </div>
+          <div style="grid-column:1/-1;">
+            <div style="font-size:11px;color:#64748b;margin-bottom:3px;">E-mail</div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px 10px;font-size:12px;color:#94a3b8;">contato@empresa.com</div>
+          </div>
+          <div style="grid-column:1/-1;">
+            <div style="font-size:11px;color:#64748b;margin-bottom:3px;">Endereço</div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px 10px;font-size:12px;color:#94a3b8;">Rua, número, cidade - UF, CEP</div>
+          </div>
+          <div style="grid-column:1/-1;">
+            <div style="font-size:11px;color:#64748b;margin-bottom:3px;">Logo</div>
+            <div style="background:#f8fafc;border:1px dashed #cbd5e1;border-radius:4px;padding:10px;text-align:center;font-size:11px;color:#94a3b8;">📎 Clique para fazer upload</div>
+          </div>
+        </div>
+        <div style="background:#3b82f6;color:#fff;padding:5px 12px;border-radius:4px;font-size:11px;font-weight:600;display:inline-block;">Salvar empresa</div>
+      </div>
+
+      <!-- Card 3: Aparência -->
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span style="font-size:18px;">🎨</span>
+          <span style="font-weight:700;color:#0f172a;font-size:14px;">Aparência</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:#0f172a;">Tema</div>
+              <div style="font-size:11px;color:#64748b;">Claro ou escuro</div>
+            </div>
+            <div style="display:flex;gap:4px;">
+              <div style="background:#3b82f6;color:#fff;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:600;">☀ Claro</div>
+              <div style="background:#f1f5f9;color:#475569;padding:4px 10px;border-radius:4px;font-size:11px;">🌙 Escuro</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:#0f172a;">Idioma</div>
+              <div style="font-size:11px;color:#64748b;">Idioma da interface</div>
+            </div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:5px 10px;font-size:11px;color:#0f172a;">🇧🇷 Português (BR)</div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#0f172a;margin-bottom:6px;">Cor principal</div>
+            <div style="display:flex;gap:6px;">
+              <div style="width:24px;height:24px;border-radius:50%;background:#3b82f6;border:2px solid #1d4ed8;"></div>
+              <div style="width:24px;height:24px;border-radius:50%;background:#10b981;"></div>
+              <div style="width:24px;height:24px;border-radius:50%;background:#8b5cf6;"></div>
+              <div style="width:24px;height:24px;border-radius:50%;background:#f59e0b;"></div>
+              <div style="width:24px;height:24px;border-radius:50%;background:#ef4444;"></div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:10px;color:#94a3b8;margin:0;">As preferências de aparência são salvas automaticamente.</p>
+      </div>
+
+      <!-- Card 4: Notificações -->
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:20px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span style="font-size:18px;">🔔</span>
+          <span style="font-weight:700;color:#0f172a;font-size:14px;">Notificações</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:#f8fafc;border-radius:6px;">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:#0f172a;">📦 Estoque Baixo</div>
+              <div style="font-size:11px;color:#64748b;">Alertar quando produto atingir mínimo</div>
+            </div>
+            <div style="width:36px;height:20px;background:#3b82f6;border-radius:10px;position:relative;">
+              <div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;right:2px;top:2px;"></div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:#f8fafc;border-radius:6px;">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:#0f172a;">↩️ Devoluções</div>
+              <div style="font-size:11px;color:#64748b;">Alerta quando uma devolução for registrada</div>
+            </div>
+            <div style="width:36px;height:20px;background:#3b82f6;border-radius:10px;position:relative;">
+              <div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;right:2px;top:2px;"></div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:10px;color:#94a3b8;margin:0;">As preferências de notificação são salvas automaticamente.</p>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -11,6 +11,7 @@ import salesRoutes from '../routes/sales';
 import reportRoutes from '../routes/reports';
 import financialRoutes from '../routes/financial';
 import returnRoutes from '../routes/returns';
+import settingsRoutes from '../routes/settings';
 import onboardingRoutes from '../routes/onboarding';
 
 /**
@@ -38,6 +39,7 @@ export function buildTestApp(): Express {
   app.use('/api/reports', reportRoutes);
   app.use('/api/financial', financialRoutes);
   app.use('/api/returns', returnRoutes);
+  app.use('/api/settings', settingsRoutes);
   app.use('/api/onboarding', onboardingRoutes);
 
   app.get('/health', (_req, res) => {

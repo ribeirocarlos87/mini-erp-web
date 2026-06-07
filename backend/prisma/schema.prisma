@@ -43,6 +43,8 @@ model Company {
   cnpj      String?  @unique @db.VarChar(14)
   email     String?  @db.VarChar(100)
   phone     String?  @db.VarChar(20)
+  address   String?  @db.VarChar(255)
+  logo      String?  @db.Text
   // Campos coletados no onboarding — usados para personalizar recursos.
   // Valores válidos são validados na rota via isIn() do express-validator.
   taxRegime    String? @map("tax_regime") @db.VarChar(50)   // MEI | SIMPLES | PRESUMIDO | REAL | SEM_EMPRESA

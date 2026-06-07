@@ -100,3 +100,71 @@ describe('POST /api/auth/login', () => {
     expect(res.status).toBe(400);
   });
 });
+
+describe('PATCH /api/auth/profile', () => {
+  it('200 updates name and email', async () => {
+    const reg = await AuthService.registerUser('Original', 'orig@test.local', 'senha123');
+    const res = await request(app)
+      .patch('/api/auth/profile')
+      .set('Authorization', `Bearer ${reg.token}`)
+      .send({ name: 'Novo Nome', email: 'novo@test.local' });
+    expect(res.status).toBe(200);
+    expect(res.body.name).toBe('Novo Nome');
+    expect(res.body.email).toBe('novo@test.local');
+  });
+
+  it('401 without token', async () => {
+    const res = await request(app)
+      .patch('/api/auth/profile')
+      .send({ name: 'X', email: 'x@test.local' });
+    expect(res.status).toBe(401);
+  });
+
+  it('400 when name is empty', async () => {
+    const reg = await AuthService.registerUser('U', 'u@test.local', 'senha123');
+    const res = await request(app)
+      .patch('/api/auth/profile')
+      .set('Authorization', `Bearer ${reg.token}`)
+      .send({ name: '', email: 'u@test.local' });
+    expect(res.status).toBe(400);
+  });
+
+  it('409 when email already taken', async () => {
+    await AuthService.registerUser('A', 'a@test.local', 'senha123');
+    const regB = await AuthService.registerUser('B', 'b@test.local', 'senha123');
+    const res = await request(app)
+      .patch('/api/auth/profile')
+      .set('Authorization', `Bearer ${regB.token}`)
+      .send({ name: 'B', email: 'a@test.local' });
+    expect(res.status).toBe(409);
+  });
+});
+
+describe('PATCH /api/auth/password', () => {
+  it('200 changes password', async () => {
+    const reg = await AuthService.registerUser('U', 'u@test.local', 'senhaAntiga');
+    const res = await request(app)
+      .patch('/api/auth/password')
+      .set('Authorization', `Bearer ${reg.token}`)
+      .send({ currentPassword: 'senhaAntiga', newPassword: 'senhaNova123' });
+    expect(res.status).toBe(200);
+  });
+
+  it('401 when current password is wrong', async () => {
+    const reg = await AuthService.registerUser('U', 'u@test.local', 'senhaAntiga');
+    const res = await request(app)
+      .patch('/api/auth/password')
+      .set('Authorization', `Bearer ${reg.token}`)
+      .send({ currentPassword: 'errada', newPassword: 'senhaNova123' });
+    expect(res.status).toBe(401);
+  });
+
+  it('400 when newPassword is missing', async () => {
+    const reg = await AuthService.registerUser('U', 'u@test.local', 'senhaAntiga');
+    const res = await request(app)
+      .patch('/api/auth/password')
+      .set('Authorization', `Bearer ${reg.token}`)
+      .send({ currentPassword: 'senhaAntiga' });
+    expect(res.status).toBe(400);
+  });
+});
