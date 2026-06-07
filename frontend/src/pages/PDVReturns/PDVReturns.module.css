@@ -42,7 +42,7 @@
 
 .pdvReturnsSearchInput:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -102,7 +102,7 @@
 }
 
 .pdvReturnsSaleCard.selected {
-  border-color: #3b82f6;
+  border-color: var(--color-primary);
   background: #dbeafe;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
 }
@@ -110,7 +110,7 @@
 .pdvReturnsSaleId {
   font-weight: 700;
   font-size: 0.9rem;
-  color: #2563eb;
+  color: var(--color-primary);
   flex-shrink: 0;
 }
 

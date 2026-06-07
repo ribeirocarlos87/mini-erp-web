@@ -103,4 +103,29 @@
   --z-tooltip: 1002;
 }
 
-/* ==================== DARK MODE (Desativado) ==================== */
+/* ==================== SEMANTIC THEME TOKENS (Light) ==================== */
+
+:root {
+  --bg-page:       #f5f7fa;
+  --bg-card:       #ffffff;
+  --bg-secondary:  #f1f5f9;
+  --bg-input:      #f8fafc;
+  --text-primary:  #0f172a;
+  --text-secondary: #475569;
+  --text-muted:    #94a3b8;
+  --border:        #e2e8f0;
+}
+
+/* ==================== DARK MODE ==================== */
+
+[data-theme="dark"] {
+  --bg-page:       #0f172a;
+  --bg-card:       #1e293b;
+  --bg-secondary:  #1e293b;
+  --bg-input:      #0f172a;
+  --text-primary:  #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted:    #64748b;
+  --border:        #334155;
+  --color-primary: #3b82f6;
+}

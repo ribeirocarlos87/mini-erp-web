@@ -42,7 +42,7 @@
 
 .pdvSearchInput:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -79,22 +79,22 @@
 
 .pdvProductCard:hover {
   background: #f8fafc;
-  border-top-color: #3b82f6;
-  border-bottom-color: #3b82f6;
+  border-top-color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
 
 .pdvProductCard.inCart {
   background: #dbeafe;
-  border-top-color: #3b82f6;
-  border-bottom-color: #3b82f6;
+  border-top-color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
   cursor: pointer;
 }
 
 .pdvProductCard.inCart:hover {
   background: #dbeafe;
-  border-top-color: #3b82f6;
-  border-bottom-color: #3b82f6;
+  border-top-color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
 }
 
 .pdvProductImagePlaceholder {
@@ -281,14 +281,14 @@
 }
 
 .pdvPageActive {
-  background: #3b82f6;
+  background: var(--color-primary);
   color: white;
-  border-color: #3b82f6;
+  border-color: var(--color-primary);
 }
 
 .pdvPageActive:hover {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .pdvPageDots {
@@ -381,7 +381,7 @@
 
 .modalBtn {
   margin-top: 0.5rem;
-  background: #3b82f6;
+  background: var(--color-primary);
   color: white;
   border: none;
   padding: 0.6rem 2.5rem;
@@ -393,7 +393,7 @@
 }
 
 .modalBtn:hover {
-  background: #2563eb;
+  background: var(--color-primary-hover);
 }
 
 /* Responsive */
@@ -451,7 +451,7 @@
   }
 
   .pdvProductCard.inCart {
-    border-color: #3b82f6;
+    border-color: var(--color-primary);
   }
 
   .pdvProductImagePlaceholder {

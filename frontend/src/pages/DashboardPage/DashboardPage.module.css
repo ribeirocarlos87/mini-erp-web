@@ -25,7 +25,7 @@
   width: 36px;
   height: 36px;
   border: 3px solid #e2e8f0;
-  border-top-color: #3b82f6;
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -161,7 +161,7 @@
 
 .dashPanelIcon { flex-shrink: 0; }
 .dashPanelIcon.alert    { color: #f59e0b; }
-.dashPanelIcon.activity { color: #3b82f6; }
+.dashPanelIcon.activity { color: var(--color-primary); }
 
 .dashEmpty {
   display: flex;

@@ -7,7 +7,7 @@
 .headerRow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; }
 .backBtn {
   display: inline-flex; align-items: center; gap: 0.35rem;
-  background: none; border: none; color: #2563eb; font-size: 0.875rem;
+  background: none; border: none; color: var(--color-primary); font-size: 0.875rem;
   font-weight: 600; cursor: pointer; padding: 0.45rem 0.75rem; border-radius: 8px;
   transition: background 0.2s; font-family: inherit;
 }
@@ -31,15 +31,15 @@
   font-size: 0.875rem; font-family: inherit; color: #0f172a;
   background: #f8fafc; transition: border-color 0.2s; min-width: 155px;
 }
-.filterInput:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+.filterInput:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
 .filterSelect { composes: filterInput; cursor: pointer; }
 .filterBtn {
   display: inline-flex; align-items: center; gap: 0.4rem;
-  padding: 0.5rem 1.25rem; background: #2563eb; color: #fff; border: none;
+  padding: 0.5rem 1.25rem; background: var(--color-primary); color: #fff; border: none;
   border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer;
   transition: background 0.2s; height: 38px; font-family: inherit;
 }
-.filterBtn:hover { background: #1d4ed8; }
+.filterBtn:hover { background: var(--color-primary-hover); }
 .filterBtn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 /* ── Summary Cards ── */
@@ -85,7 +85,7 @@
 .badgeGreen { background: #d1fae5; color: #065f46; }
 .badgeYellow { background: #fef3c7; color: #92400e; }
 .badgeRed { background: #fee2e2; color: #991b1b; }
-.badgeBlue { background: #dbeafe; color: #1e40af; }
+.badgeBlue { background: #dbeafe; color: var(--color-primary-hover); }
 .badgePurple { background: #ede9fe; color: #5b21b6; }
 .badgeGray { background: #f1f5f9; color: #475569; }
 

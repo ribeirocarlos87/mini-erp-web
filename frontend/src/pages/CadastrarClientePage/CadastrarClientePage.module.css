@@ -36,8 +36,8 @@
 }
 
 .tab.active {
-  color: #2563eb;
-  border-bottom-color: #2563eb;
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
   cursor: pointer;
 }
 
@@ -72,7 +72,7 @@
 }
 
 .photoPreview:hover {
-  border-color: #2563eb;
+  border-color: var(--color-primary);
 }
 
 .photoPreview img {
@@ -114,8 +114,8 @@
 
 .btnUpload:hover {
   background: #f0edff;
-  border-color: #2563eb;
-  color: #2563eb;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .btnRemovePhoto {
@@ -161,7 +161,7 @@
 
 .fieldGroup input:focus,
 .fieldGroup select:focus {
-  border-color: #2563eb;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -212,7 +212,7 @@
 }
 
 .textarea:focus {
-  border-color: #2563eb;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -242,14 +242,14 @@
   font-weight: 600;
   border-radius: 8px;
   border: none;
-  background: #2563eb;
+  background: var(--color-primary);
   color: #fff;
   cursor: pointer;
   transition: background 0.2s, opacity 0.2s;
 }
 
 .btnSave:hover {
-  background: #1d4ed8;
+  background: var(--color-primary-hover);
 }
 
 .btnSave:disabled {
@@ -329,7 +329,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary));
   border-radius: 0 0 20px 20px;
   transform-origin: left center;
 }

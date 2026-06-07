@@ -2,6 +2,14 @@ import React from 'react';
 import styles from '../ConfiguracoesPage.module.css';
 import { useSettingsStore } from '../../../store/settingsStore';
 
+function darken(hex: string): string {
+  const n = parseInt(hex.replace('#', ''), 16);
+  const r = Math.max(0, (n >> 16) - 30);
+  const g = Math.max(0, ((n >> 8) & 0xff) - 30);
+  const b = Math.max(0, (n & 0xff) - 30);
+  return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
+}
+
 const COLORS = [
   '#3b82f6',
   '#10b981',
@@ -24,6 +32,7 @@ const AparenciaCard: React.FC = () => {
   const handleColor = (color: string) => {
     setPrimaryColor(color);
     document.documentElement.style.setProperty('--color-primary', color);
+    document.documentElement.style.setProperty('--color-primary-hover', darken(color));
   };
 
   return (

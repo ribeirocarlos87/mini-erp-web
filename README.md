@@ -188,7 +188,7 @@ projeto/
 ├── backend/
 │   ├── prisma/
 │   │   ├── schema.prisma          # Fonte de verdade do modelo
-│   │   └── migrations/            # 8 migrations versionadas
+│   │   └── migrations/            # 9 migrations versionadas
 │   └── src/
 │       ├── server.ts              # Bootstrap Express
 │       ├── middleware/auth.ts     # JWT
@@ -220,14 +220,14 @@ Suíte cobrindo **backend completo + stores/services/components/pages do fronten
 
 ```mermaid
 graph TB
-    subgraph "Backend (249 testes, 27 arquivos)"
+    subgraph "Backend (300 testes, 32 arquivos)"
         BS[12 services<br/>156 testes]
         BR[12 rotas<br/>78 testes]
         BM[middleware/auth<br/>6 testes]
         BI[infra db/factories<br/>9 testes]
     end
 
-    subgraph "Frontend (248 testes, 71 arquivos)"
+    subgraph "Frontend (329 testes, 82 arquivos)"
         FS[13 services axios<br/>71 testes]
         FT[2 stores zustand<br/>25 testes]
         FC[13 componentes<br/>74 testes]
@@ -241,7 +241,7 @@ graph TB
     FP -.usa.-> happydom
 ```
 
-**Total: 497 testes passando, 0 skips, ~55 segundos.**
+**Total: 629 testes (629 passando), ~55 segundos.**
 
 ### Estratégia
 
@@ -376,8 +376,8 @@ graph LR
     PR --> Frontend
     Backend[Job backend<br/>Postgres service container] --> BTests[npm test]
     Frontend[Job frontend<br/>Node 20] --> FTests[npm test]
-    BTests -.|✓ 249 passing|.-> Done[CI ✅]
-    FTests -.|✓ 248 passing|.-> Done
+    BTests -.|✓ 300 passing|.-> Done[CI ✅]
+    FTests -.|✓ 329 passing|.-> Done
 ```
 
 Cache de dependências baseado em `package-lock.json` por pacote, Postgres 15 como service container na porta 5434.
@@ -390,7 +390,7 @@ Tokens em [frontend/src/styles/globals/variables.css](frontend/src/styles/global
 
 | Token | Valor |
 |---|---|
-| `--color-primary` | `#2563eb` |
+| `--color-primary` | `#2563eb` (padrão, customizável via Configurações → Aparência) |
 | `--color-success` | `#10b981` |
 | `--color-error` | `#ef4444` |
 | Espaçamento base | 8px (`--spacing-md`) |
@@ -459,4 +459,4 @@ Projeto desenvolvido no curso de Análise e Desenvolvimento de Sistemas — Cent
 
 ---
 
-**Status atual**: PDV completo · Devoluções com saldo de crédito · 12 relatórios · 497 testes passando · CI configurada
+**Status atual**: PDV completo · Devoluções com saldo de crédito · 12 relatórios · 629 testes passando · CI configurada

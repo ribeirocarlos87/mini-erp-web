@@ -14,6 +14,13 @@ describe('settingsService.updateProfile', () => {
     expect(mockedApi.patch).toHaveBeenCalledWith('/auth/profile', { name: 'N', email: 'e@e.com' });
     expect(result.name).toBe('N');
   });
+
+  it('propagates error on failure', async () => {
+    mockedApi.patch = vi.fn().mockRejectedValue({ response: { data: { error: 'E-mail já em uso' } } });
+    await expect(settingsService.updateProfile({ name: 'N', email: 'dup@e.com' })).rejects.toMatchObject({
+      response: { data: { error: 'E-mail já em uso' } },
+    });
+  });
 });
 
 describe('settingsService.updatePassword', () => {
@@ -21,6 +28,13 @@ describe('settingsService.updatePassword', () => {
     mockedApi.patch = vi.fn().mockResolvedValue({ data: { message: 'ok' } });
     await settingsService.updatePassword({ currentPassword: 'old', newPassword: 'new123' });
     expect(mockedApi.patch).toHaveBeenCalledWith('/auth/password', { currentPassword: 'old', newPassword: 'new123' });
+  });
+
+  it('propagates error on wrong current password', async () => {
+    mockedApi.patch = vi.fn().mockRejectedValue({ response: { data: { error: 'Senha atual incorreta' } } });
+    await expect(settingsService.updatePassword({ currentPassword: 'errada', newPassword: 'nova123' })).rejects.toMatchObject({
+      response: { data: { error: 'Senha atual incorreta' } },
+    });
   });
 });
 
@@ -31,6 +45,11 @@ describe('settingsService.getCompany', () => {
     expect(mockedApi.get).toHaveBeenCalledWith('/settings/company');
     expect(result.name).toBe('Emp');
   });
+
+  it('propagates error on failure', async () => {
+    mockedApi.get = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    await expect(settingsService.getCompany()).rejects.toMatchObject({ response: { status: 500 } });
+  });
 });
 
 describe('settingsService.upsertCompany', () => {
@@ -40,5 +59,11 @@ describe('settingsService.upsertCompany', () => {
     const result = await settingsService.upsertCompany(payload);
     expect(mockedApi.patch).toHaveBeenCalledWith('/settings/company', payload);
     expect(result.name).toBe('Emp');
+  });
+
+  it('propagates error on failure', async () => {
+    const payload = { name: 'Emp', cnpj: null, email: null, phone: null, address: null, logo: null };
+    mockedApi.patch = vi.fn().mockRejectedValue({ response: { status: 500 } });
+    await expect(settingsService.upsertCompany(payload)).rejects.toMatchObject({ response: { status: 500 } });
   });
 });

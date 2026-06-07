@@ -148,8 +148,16 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const darken = (hex: string) => {
+      const n = parseInt(hex.replace('#', ''), 16);
+      const r = Math.max(0, (n >> 16) - 30);
+      const g = Math.max(0, ((n >> 8) & 0xff) - 30);
+      const b = Math.max(0, (n & 0xff) - 30);
+      return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
+    };
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.style.setProperty('--color-primary', primaryColor);
+    document.documentElement.style.setProperty('--color-primary-hover', darken(primaryColor));
   }, []);
 
   return (
