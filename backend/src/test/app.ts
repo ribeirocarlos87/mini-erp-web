@@ -12,6 +12,7 @@ import reportRoutes from '../routes/reports';
 import financialRoutes from '../routes/financial';
 import returnRoutes from '../routes/returns';
 import settingsRoutes from '../routes/settings';
+import onboardingRoutes from '../routes/onboarding';
 
 /**
  * Constrói uma instância do app Express IDÊNTICA à do server.ts, mas sem `listen()`.
@@ -39,6 +40,7 @@ export function buildTestApp(): Express {
   app.use('/api/financial', financialRoutes);
   app.use('/api/returns', returnRoutes);
   app.use('/api/settings', settingsRoutes);
+  app.use('/api/onboarding', onboardingRoutes);
 
   app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'OK' });

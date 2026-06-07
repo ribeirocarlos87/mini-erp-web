@@ -40,6 +40,7 @@ import DespesaRecorrentePage from './pages/FinanceiroPage/pages/DespesaRecorrent
 import LancarEntradaPage from './pages/FinanceiroPage/pages/LancarEntradaPage';
 import RenegociacaoDividaPage from './pages/FinanceiroPage/pages/RenegociacaoDividaPage';
 import LancarDevolucaoPage from './pages/LancarDevolucaoPage';
+import OnboardingPage from './pages/OnboardingPage';
 import { PDVLayout } from './layouts/PDVLayout';
 import WelcomeOverlay from './components/WelcomeOverlay';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -55,6 +56,28 @@ const useIsMobile = (breakpoint = 768) => {
   }, [breakpoint]);
 
   return isMobile;
+};
+
+/**
+ * Guard exclusivo do /onboarding — exige user logado mas NÃO redireciona
+ * quando onboardingCompletedAt está vazio (justamente onde o wizard atua).
+ * Se já completou, manda pro dashboard.
+ */
+const OnboardingGuard: React.FC<{ children: React.ReactNode; isInitializing: boolean }> = ({
+  children,
+  isInitializing,
+}) => {
+  const user = useAuthStore((state) => state.user);
+  if (isInitializing) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: '#666' }}>
+        Carregando...
+      </div>
+    );
+  }
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.onboardingCompletedAt) return <Navigate to="/dashboard" replace />;
+  return <>{children}</>;
 };
 
 const ProtectedLayout: React.FC<{ children: React.ReactNode; isInitializing: boolean }> = ({
@@ -84,6 +107,9 @@ const ProtectedLayout: React.FC<{ children: React.ReactNode; isInitializing: boo
   }
 
   if (!user) return <Navigate to="/login" />;
+  // Gate de onboarding: enquanto o user não completou, força redirect.
+  // Frontend-only gate (não bloqueia API) — onboarding é fluxo de UX.
+  if (!user.onboardingCompletedAt) return <Navigate to="/onboarding" replace />;
 
   return (
     <>
@@ -131,6 +157,7 @@ function App() {
       <SidebarProvider>
         <Routes>
           <Route path="/login" element={<AuthPage />} />
+          <Route path="/onboarding" element={<OnboardingGuard isInitializing={isInitializing}><OnboardingPage /></OnboardingGuard>} />
           <Route path="/pdv/*" element={<PDVLayout isInitializing={isInitializing}><PDVPage /></PDVLayout>} />
           <Route path="/dashboard" element={<ProtectedLayout isInitializing={isInitializing}><DashboardPage /></ProtectedLayout>} />
           <Route path="/gestao-estoque" element={<ProtectedLayout isInitializing={isInitializing}><GestaoEstoquePage /></ProtectedLayout>} />

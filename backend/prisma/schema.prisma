@@ -13,10 +13,12 @@ model User {
   email        String     @unique @db.VarChar(100)
   passwordHash String     @map("password_hash") @db.VarChar(255)
   name         String     @db.VarChar(100)
+  onboardingCompletedAt DateTime? @map("onboarding_completed_at")
   createdAt    DateTime   @default(now()) @map("created_at")
   updatedAt    DateTime   @default(now()) @updatedAt @map("updated_at")
 
   company            Company?
+  onboarding         OnboardingResponse?
   products           Product[]
   suppliers          Supplier[]
   clients            Client[]
@@ -43,12 +45,53 @@ model Company {
   phone     String?  @db.VarChar(20)
   address   String?  @db.VarChar(255)
   logo      String?  @db.Text
+  // Campos coletados no onboarding — usados para personalizar recursos.
+  // Valores válidos são validados na rota via isIn() do express-validator.
+  taxRegime    String? @map("tax_regime") @db.VarChar(50)   // MEI | SIMPLES | PRESUMIDO | REAL | SEM_EMPRESA
+  segment      String? @db.VarChar(100)                       // moda | casa | alimentacao | eletronicos | papelaria | construcao | pet | servicos | industria | bar
+  businessType String? @map("business_type") @db.VarChar(20)  // produtos | servicos | ambos
+  multiStore   String? @map("multi_store") @db.VarChar(50)    // unica | integrada | independente
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("companies")
+}
+
+/// Respostas do questionário de onboarding (1:1 com User).
+///
+/// Modelo separado de Company porque guarda dados de marketing/UX (canais de venda,
+/// equipamentos, preferência de aprendizado) que não dirigem regra de negócio mas
+/// servem para personalização e relatórios. Campos String[] usam array nativo do
+/// Postgres — sem join table necessária.
+model OnboardingResponse {
+  id               Int       @id @default(autoincrement())
+  userId           Int       @unique @map("user_id")
+  // Onde a loja vende: fisica | whatsapp | instagram | tiktok | ecommerce | marketplace | outras_redes
+  salesChannels    String[]  @default([]) @map("sales_channels")
+  // Como conheceu: indicacao | instagram | whatsapp | google | evento | redes_sociais | site | blog | outro
+  heardAbout       String?   @map("heard_about") @db.VarChar(50)
+  // Como controla hoje: cabeca | caderno | planilha | erp
+  currentControl   String?   @map("current_control") @db.VarChar(20)
+  // O que quer melhorar: financeiro | estoque | vender_mais | integracao | profissionalizar | numeros
+  improvementGoals String[]  @default([]) @map("improvement_goals")
+  // Equipamentos: pdv_dedicado | impressora_termica | impressora_comum | leitor_barras | gaveta | balanca | maquininha | so_celular | nenhum
+  equipment        String[]  @default([])
+  // Como aprende: nao_estudo | youtube | instagram | tiktok | eventos | sebrae | cursos | podcasts | indicacao | outros
+  learningPrefs    String[]  @default([]) @map("learning_prefs")
+  // Nível tech: basico | necessario | curioso | entusiasta
+  techLevel        String?   @map("tech_level") @db.VarChar(20)
+  // Preferência de tutorial: video | passo_a_passo | tour | explorar
+  tutorialPref     String?   @map("tutorial_pref") @db.VarChar(20)
+  // WhatsApp obrigatório no último step (suporte/onboarding ativo)
+  whatsapp         String    @db.VarChar(20)
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("onboarding_responses")
 }
 
 model Supplier {

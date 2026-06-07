@@ -27,7 +27,7 @@ export class AuthService {
           email,
           passwordHash: hashedPassword,
         },
-        select: { id: true, email: true, name: true },
+        select: { id: true, email: true, name: true, onboardingCompletedAt: true },
       });
 
       await tx.company.create({
@@ -53,6 +53,7 @@ export class AuthService {
         id: result.id,
         email: result.email,
         name: result.name,
+        onboardingCompletedAt: result.onboardingCompletedAt,
       },
       token,
     };
@@ -116,6 +117,7 @@ export class AuthService {
         id: user.id,
         email: user.email,
         name: user.name,
+        onboardingCompletedAt: user.onboardingCompletedAt,
       },
       token,
     };

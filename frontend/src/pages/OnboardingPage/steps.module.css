@@ -1,0 +1,171 @@
+/* ─── Grid responsivo de cards ─── */
+/* `auto-fit` faz o grid acomodar quantos cards couberem por linha:
+ *   - Desktop (~720px container): 3 colunas (220 * 3 + gaps)
+ *   - Tablet (~500-720px): 2 colunas
+ *   - Mobile (<500px): 1 coluna automaticamente
+ * Garante que steps com muitas opções (segmento=10, equipamentos=9) caibam
+ * sem scroll na maioria das telas desktop. */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-sm);
+  align-items: stretch;
+}
+
+/* Fallback / legado — alguns lugares ainda referenciam .cardList */
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Em mobile, sempre 1 coluna independente do minmax (cards ficam full-width) */
+@media (max-width: 480px) {
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Bloco de formulário (CNPJ, WhatsApp) ─── */
+.formBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  align-items: stretch;
+}
+
+.textInput {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 1.5px solid var(--color-slate-200);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-lg);
+  font-family: inherit;
+  background: var(--color-white);
+  color: var(--color-slate-900);
+  transition: var(--transition-base);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+}
+
+.textInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.textInput:disabled {
+  background: var(--color-slate-50);
+  color: var(--color-slate-400);
+  cursor: not-allowed;
+}
+
+.formHint {
+  font-size: var(--font-size-sm);
+  color: var(--color-slate-500);
+  margin: 0;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.optOut {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-slate-600);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  transition: var(--transition-base);
+  align-self: center;
+}
+
+.optOut:hover {
+  background: var(--color-slate-50);
+}
+
+.optOut input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+.contactBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  align-self: center;
+}
+
+/* ─── Welcome step ─── */
+.welcomeBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+}
+
+.welcomeEmoji {
+  font-size: 72px;
+  line-height: 1;
+}
+
+.welcomeGreeting {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin: 0;
+}
+
+.welcomeBody {
+  font-size: var(--font-size-md);
+  color: var(--color-slate-600);
+  max-width: 480px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.welcomeMeta {
+  display: inline-flex;
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin: 0;
+}
+
+.welcomeFootnote {
+  font-size: var(--font-size-sm);
+  color: var(--color-slate-500);
+  max-width: 480px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ─── Mobile ─── */
+@media (max-width: 640px) {
+  .textInput {
+    font-size: var(--font-size-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .welcomeEmoji {
+    font-size: 56px;
+  }
+
+  .welcomeGreeting {
+    font-size: var(--font-size-2xl);
+  }
+}
