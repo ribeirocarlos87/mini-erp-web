@@ -1,0 +1,38 @@
+<h2>Card "Notificações" — quais preferências expor?</h2>
+<p class="subtitle">Selecione os alertas que o usuário deve poder ativar/desativar (múltipla escolha)</p>
+
+<div class="options" data-multiselect>
+
+  <div class="option" data-choice="estoque_baixo" onclick="toggleSelect(this)">
+    <div class="letter">📦</div>
+    <div class="content">
+      <h3>Estoque Baixo</h3>
+      <p>Alertar quando produto atingir estoque mínimo. Já existe lógica no backend.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="vencimentos" onclick="toggleSelect(this)">
+    <div class="letter">📅</div>
+    <div class="content">
+      <h3>Vencimentos Financeiros</h3>
+      <p>Lembrar de despesas recorrentes e dívidas próximas do vencimento.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="vendas" onclick="toggleSelect(this)">
+    <div class="letter">💰</div>
+    <div class="content">
+      <h3>Resumo de Vendas</h3>
+      <p>Notificação diária/semanal com resumo de performance de vendas.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="devolucoes" onclick="toggleSelect(this)">
+    <div class="letter">↩️</div>
+    <div class="content">
+      <h3>Devoluções</h3>
+      <p>Alerta quando uma devolução for registrada.</p>
+    </div>
+  </div>
+
+</div>
