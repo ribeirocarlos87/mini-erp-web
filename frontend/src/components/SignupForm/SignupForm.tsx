@@ -44,7 +44,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin }) => {
     try {
       const response = await authService.register(name, email, password);
       login(response.user, response.token);
-      navigate('/dashboard');
+      navigate(response.user.onboardingCompletedAt ? '/dashboard' : '/onboarding');
     } catch (err: any) {
       let msg = 'Falha ao cadastrar';
       if (err.response?.status === 409)          msg = 'Este e-mail já está cadastrado';
