@@ -13,6 +13,7 @@ import salesRoutes from './routes/sales';
 import reportRoutes from './routes/reports';
 import financialRoutes from './routes/financial';
 import returnRoutes from './routes/returns';
+import onboardingRoutes from './routes/onboarding';
 
 console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
 dotenv.config();
@@ -39,6 +40,7 @@ app.use('/api/sales', salesRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/financial', financialRoutes);
 app.use('/api/returns', returnRoutes);
+app.use('/api/onboarding', onboardingRoutes);
 
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'OK' });

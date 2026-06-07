@@ -1,9 +1,13 @@
 import { create } from 'zustand';
 
-interface User {
+export interface User {
   id: number;
   email: string;
   name: string;
+  // null/undefined = ainda não completou o onboarding; ProtectedLayout redireciona pra /onboarding.
+  // Vem do backend como ISO string ou null. Optional para tolerar User objects salvos por
+  // versões anteriores no localStorage (são tratados como "não completaram" e redirecionados).
+  onboardingCompletedAt?: string | null;
 }
 
 interface AuthStore {
@@ -18,6 +22,8 @@ interface AuthStore {
   setError: (error: string | null) => void;
   setLoading: (loading: boolean) => void;
   clearJustLoggedIn: () => void;
+  // Marca o onboarding como concluído após POST /api/onboarding/complete.
+  markOnboardingComplete: (completedAt: string) => void;
   initialize: () => void;
 }
 
@@ -48,6 +54,14 @@ export const useAuthStore = create<AuthStore>((set) => {
     setError: (error: string | null) => set({ error }),
     setLoading: (loading: boolean) => set({ isLoading: loading }),
     clearJustLoggedIn: () => set({ justLoggedIn: false }),
+
+    markOnboardingComplete: (completedAt: string) =>
+      set((state) => {
+        if (!state.user) return state;
+        const next = { ...state.user, onboardingCompletedAt: completedAt };
+        localStorage.setItem('user', JSON.stringify(next));
+        return { user: next };
+      }),
 
     // Mantido por compatibilidade, mas não é mais necessário
     initialize: () => {},
