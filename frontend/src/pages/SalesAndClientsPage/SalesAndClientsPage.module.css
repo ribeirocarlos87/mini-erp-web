@@ -46,7 +46,7 @@
 }
 
 .sectionIcon {
-  color: #2563eb;
+  color: var(--color-primary);
 }
 
 .sectionTitle {
@@ -81,7 +81,7 @@
 }
 
 .actionCard:hover {
-  border-color: #2563eb;
+  border-color: var(--color-primary);
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
 }
 
@@ -134,7 +134,7 @@
 
 .actionCard:hover .actionArrow {
   transform: translateX(3px);
-  color: #2563eb;
+  color: var(--color-primary);
 }
 
 /* ── Responsive ── */

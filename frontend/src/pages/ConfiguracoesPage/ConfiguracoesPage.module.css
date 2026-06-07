@@ -121,6 +121,16 @@
   cursor: pointer;
 }
 
+.inputError {
+  border-color: #e57373 !important;
+}
+
+.errorText {
+  font-size: 11px;
+  color: #e57373;
+  margin-top: 2px;
+}
+
 .errorMsg {
   font-size: 12px;
   color: #ef4444;

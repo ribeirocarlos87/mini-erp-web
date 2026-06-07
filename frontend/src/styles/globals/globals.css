@@ -30,8 +30,8 @@ body {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-normal);
-  color: var(--color-slate-900);
-  background-color: white;
+  color: var(--text-primary);
+  background-color: var(--bg-page);
   transition: background-color var(--transition-base), color var(--transition-base);
   min-height: 100%;                    /* cresce com o conteúdo              */
   overflow-x: hidden;                  /* bloqueia scroll horizontal global  */

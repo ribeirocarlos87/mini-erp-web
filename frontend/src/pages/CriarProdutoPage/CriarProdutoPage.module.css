@@ -42,12 +42,12 @@
 }
 
 .tab:hover {
-  color: #2563eb;
+  color: var(--color-primary);
 }
 
 .tab.active {
-  color: #2563eb;
-  border-bottom-color: #2563eb;
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
 }
 
 /* Form grid */
@@ -85,7 +85,7 @@
 .fieldGroup input:focus,
 .fieldGroup select:focus,
 .fieldGroup textarea:focus {
-  border-color: #2563eb;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -195,8 +195,8 @@
 }
 
 .imageUploadArea:hover {
-  border-color: #2563eb;
-  color: #2563eb;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 /* Toggle switch */
@@ -220,7 +220,7 @@
 }
 
 .toggleSwitch.active {
-  background: #2563eb;
+  background: var(--color-primary);
 }
 
 .toggleSwitch::after {
@@ -277,14 +277,14 @@
   font-weight: 600;
   border-radius: 8px;
   border: none;
-  background: #2563eb;
+  background: var(--color-primary);
   color: #fff;
   cursor: pointer;
   transition: background 0.2s, opacity 0.2s;
 }
 
 .btnSave:hover {
-  background: #1d4ed8;
+  background: var(--color-primary-hover);
 }
 
 .btnSave:disabled {
@@ -354,7 +354,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary));
   border-radius: 0 0 20px 20px;
   transform-origin: left center;
 }
@@ -423,7 +423,7 @@
 }
 
 .modalField input:focus {
-  border-color: #2563eb;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 

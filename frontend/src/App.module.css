@@ -37,8 +37,7 @@
   justify-content: center;
   min-height: 100dvh;         /* dvh respeita a barra de endereços no mobile */
   padding: 1.5rem 1rem;       /* espaço interno para não colar nas bordas */
-  background-color: #f5f7fa;
-  box-sizing: border-box;
+  background-color: var(--bg-page);
 }
 
 /* No mobile, permite crescer verticalmente se o conteúdo for maior que a tela */
@@ -113,8 +112,7 @@
   transition: margin-left 0.3s ease;
   flex: 1;
   overflow-y: auto;
-  background-color: #f5f7fa;
-  min-height: 100vh;
+  background-color: var(--bg-page);
   margin-left: 64px;
 }
 
@@ -153,8 +151,7 @@
 
 .pageWrapper {
   min-height: 100%;
-  background-color: #f5f7fa;
-  padding: 2rem;
+  background-color: var(--bg-page);
 }
 
 /* ============================================================================

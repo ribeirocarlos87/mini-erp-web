@@ -70,7 +70,7 @@
 
 .select:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -140,7 +140,7 @@
 }
 
 .modalField input:focus {
-  border-color: #2563eb;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -173,14 +173,14 @@
   font-weight: 600;
   border-radius: 8px;
   border: none;
-  background: #2563eb;
+  background: var(--color-primary);
   color: #fff;
   cursor: pointer;
   transition: background 0.15s, opacity 0.15s;
 }
 
 .modalBtnSave:hover {
-  background: #1d4ed8;
+  background: var(--color-primary-hover);
 }
 
 .modalBtnSave:disabled {
@@ -204,14 +204,14 @@
   padding: 0;
   font-size: 0.88rem;
   font-weight: 500;
-  color: #2563eb;
+  color: var(--color-primary);
   cursor: pointer;
   transition: color 0.15s ease;
   width: fit-content;
 }
 
 .toggleObservation:hover {
-  color: #1d4ed8;
+  color: var(--color-primary-hover);
 }
 
 .observationInput {
@@ -229,7 +229,7 @@
 
 .observationInput:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -244,7 +244,7 @@
 }
 
 .checkbox {
-  accent-color: #2563eb;
+  accent-color: var(--color-primary);
   width: 16px;
   height: 16px;
   cursor: pointer;
@@ -262,14 +262,14 @@
   border: none;
   padding: 0;
   font-size: 0.85rem;
-  color: #2563eb;
+  color: var(--color-primary);
   cursor: pointer;
   font-weight: 500;
   transition: color 0.15s ease;
 }
 
 .changeLink:hover {
-  color: #1d4ed8;
+  color: var(--color-primary-hover);
   text-decoration: underline;
 }
 
@@ -430,7 +430,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: #2563eb;
+  background: var(--color-primary);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -444,7 +444,7 @@
 }
 
 .saveBtn:hover {
-  background: #1d4ed8;
+  background: var(--color-primary-hover);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }

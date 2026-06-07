@@ -59,7 +59,7 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.55rem 1.2rem;
-  background: #2563eb;
+  background: var(--color-primary);
   color: white;
   border: none;
   border-radius: 8px;
@@ -70,7 +70,7 @@
   margin-left: auto;
 }
 
-.estoqueBtnPrimary:hover { background: #1d4ed8; }
+.estoqueBtnPrimary:hover { background: var(--color-primary-hover); }
 
 .estoqueStats {
   display: grid;
@@ -99,7 +99,7 @@
   box-shadow: 0 4px 12px rgba(15,23,42,0.1);
 }
 
-.estoqueStat.blue.statActive  { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,0.2); }
+.estoqueStat.blue.statActive  { border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(37,99,235,0.2); }
 .estoqueStat.green.statActive { border-color: #16a34a; box-shadow: 0 0 0 2px rgba(22,163,74,0.2); }
 .estoqueStat.orange.statActive { border-color: #ea580c; box-shadow: 0 0 0 2px rgba(234,88,12,0.2); }
 .estoqueStat.red.statActive   { border-color: #dc2626; box-shadow: 0 0 0 2px rgba(220,38,38,0.2); }
@@ -117,7 +117,7 @@
   text-align: center;
 }
 
-.estoqueStat.blue  .estoqueStatValue { color: #2563eb; }
+.estoqueStat.blue  .estoqueStatValue { color: var(--color-primary); }
 .estoqueStat.green .estoqueStatValue { color: #16a34a; }
 .estoqueStat.orange .estoqueStatValue { color: #ea580c; }
 .estoqueStat.red   .estoqueStatValue { color: #dc2626; }
@@ -157,7 +157,7 @@
   box-sizing: border-box;
 }
 
-.estoqueSearch:focus { border-color: #2563eb; }
+.estoqueSearch:focus { border-color: var(--color-primary); }
 .estoqueSearch::placeholder { color: #94a3b8; }
 
 .estoqueSelect {
@@ -176,7 +176,7 @@
   transition: border-color 0.15s;
 }
 
-.estoqueSelect:focus { border-color: #2563eb; }
+.estoqueSelect:focus { border-color: var(--color-primary); }
 
 .estoqueToolbar {
   display: flex;
@@ -231,8 +231,8 @@
 }
 
 .estoqueViewBtn.active {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
   color: white;
 }
 
@@ -250,7 +250,7 @@
   width: 32px;
   height: 32px;
   border: 3px solid #e2e8f0;
-  border-top-color: #2563eb;
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -473,7 +473,7 @@
   transition: background 0.15s;
 }
 
-.estoqueIconBtn.edit   { background: #eff6ff; color: #2563eb; }
+.estoqueIconBtn.edit   { background: #eff6ff; color: var(--color-primary); }
 .estoqueIconBtn.delete { background: #fef2f2; color: #dc2626; }
 .estoqueIconBtn.edit:hover   { background: #dbeafe; }
 .estoqueIconBtn.delete:hover { background: #fee2e2; }

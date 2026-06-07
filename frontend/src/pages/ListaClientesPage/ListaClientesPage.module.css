@@ -65,7 +65,7 @@
 }
 
 .searchInput:focus {
-  border-color: #2563eb;
+  border-color: var(--color-primary);
 }
 
 .searchInput::placeholder {
@@ -102,7 +102,7 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.55rem 1.2rem;
-  background: #2563eb;
+  background: var(--color-primary);
   color: white;
   border: none;
   border-radius: 8px;
@@ -113,7 +113,7 @@
 }
 
 .btnPrimary:hover {
-  background: #1d4ed8;
+  background: var(--color-primary-hover);
 }
 
 /* ── Count bar ── */
@@ -257,7 +257,7 @@
 
 .iconBtn.edit {
   background: #eff6ff;
-  color: #2563eb;
+  color: var(--color-primary);
 }
 
 .iconBtn.delete {
@@ -292,7 +292,7 @@
   width: 32px;
   height: 32px;
   border: 3px solid #e2e8f0;
-  border-top-color: #2563eb;
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -353,7 +353,7 @@
 }
 
 .perPageSelect:focus {
-  border-color: #2563eb;
+  border-color: var(--color-primary);
 }
 
 .paginationPages {
@@ -384,8 +384,8 @@
 }
 
 .pageBtn.active {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
   color: white;
 }
 

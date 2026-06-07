@@ -45,7 +45,7 @@
 }
 
 .sectionIcon {
-  color: #2563eb;
+  color: var(--color-primary);
 }
 
 .sectionTitle {
@@ -85,7 +85,7 @@
 }
 
 .actionCard:hover:not(:disabled) {
-  border-color: #2563eb;
+  border-color: var(--color-primary);
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
   transform: translateY(-1px);
 }
@@ -137,7 +137,7 @@
 
 .actionCard:hover:not(:disabled) .actionArrow {
   transform: translateX(3px);
-  color: #2563eb;
+  color: var(--color-primary);
 }
 
 /* Coming Soon Badge */

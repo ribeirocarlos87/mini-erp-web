@@ -188,7 +188,7 @@ projeto/
 ├── backend/
 │   ├── prisma/
 │   │   ├── schema.prisma          # Fonte de verdade do modelo
-│   │   └── migrations/            # 8 migrations versionadas
+│   │   └── migrations/            # 9 migrations versionadas
 │   └── src/
 │       ├── server.ts              # Bootstrap Express
 │       ├── middleware/auth.ts     # JWT
@@ -390,7 +390,7 @@ Tokens em [frontend/src/styles/globals/variables.css](frontend/src/styles/global
 
 | Token | Valor |
 |---|---|
-| `--color-primary` | `#2563eb` |
+| `--color-primary` | `#2563eb` (padrão, customizável via Configurações → Aparência) |
 | `--color-success` | `#10b981` |
 | `--color-error` | `#ef4444` |
 | Espaçamento base | 8px (`--spacing-md`) |
