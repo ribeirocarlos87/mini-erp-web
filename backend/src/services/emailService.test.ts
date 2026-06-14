@@ -32,7 +32,7 @@ describe('sendPasswordResetEmail', () => {
     expect(mockSendMail).toHaveBeenCalledOnce();
     const call = mockSendMail.mock.calls[0][0];
     expect(call.to).toBe('user@example.com');
-    expect(call.html).toContain('http://localhost:5173/auth?token=tok123');
+    expect(call.html).toContain('http://localhost:5173/login?token=tok123');
   });
 
   it('propaga erro se sendMail falhar', async () => {

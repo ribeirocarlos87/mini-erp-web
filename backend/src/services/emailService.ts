@@ -12,7 +12,7 @@ function createTransporter() {
 }
 
 export async function sendPasswordResetEmail(to: string, token: string): Promise<void> {
-  const link = `${process.env.APP_URL}/auth?token=${token}`;
+  const link = `${process.env.APP_URL}/login?token=${token}`;
   const transporter = createTransporter();
 
   await transporter.sendMail({
