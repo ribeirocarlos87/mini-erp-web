@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import LoginForm from '../components/LoginForm/LoginForm';
 import SignupForm from './SignupForm/SignupForm';
 
@@ -6,13 +6,10 @@ import styles from './Authpage.module.css';
 
 const AuthPage: React.FC = () => {
   const [activeTab, setActiveTab]   = useState<'login' | 'signup'>('login');
-  const [resetToken, setResetToken] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
+  const [resetToken, setResetToken] = useState<string | undefined>(() => {
     const params = new URLSearchParams(window.location.search);
-    const token = params.get('token') ?? undefined;
-    if (token) setResetToken(token);
-  }, []);
+    return params.get('token') ?? undefined;
+  });
 
   const handleResetSuccess = () => {
     window.history.replaceState({}, '', window.location.pathname);

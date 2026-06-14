@@ -30,6 +30,13 @@ services:
       NODE_ENV: ${NODE_ENV:-development}
       PORT: 3001
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      RESET_JWT_SECRET: ${RESET_JWT_SECRET:-reset_secret_change_in_production}
+      APP_URL: ${APP_URL:-http://localhost:3000}
+      SMTP_HOST: ${SMTP_HOST:-sandbox.smtp.mailtrap.io}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-a84d647d72a5ce}
+      SMTP_PASS: ${SMTP_PASS:-df67465cfdc81a}
+      SMTP_FROM: ${SMTP_FROM:-Mini ERP Web <noreply@minierpweb.com>}
     ports:
       - "3001:3001"
     depends_on:
