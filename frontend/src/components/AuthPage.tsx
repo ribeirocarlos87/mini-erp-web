@@ -5,7 +5,16 @@ import SignupForm from './SignupForm/SignupForm';
 import styles from './Authpage.module.css';
 
 const AuthPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
+  const params = new URLSearchParams(window.location.search);
+  const initialToken = params.get('token') ?? undefined;
+
+  const [activeTab, setActiveTab]   = useState<'login' | 'signup'>('login');
+  const [resetToken, setResetToken] = useState<string | undefined>(initialToken);
+
+  const handleResetSuccess = () => {
+    window.history.replaceState({}, '', window.location.pathname);
+    setResetToken(undefined);
+  };
 
   return (
     <div className={styles.page}>
@@ -84,7 +93,11 @@ const AuthPage: React.FC = () => {
           {/* Form area */}
           <div className={styles.formArea}>
             {activeTab === 'login' ? (
-              <LoginForm onSwitchToSignup={() => setActiveTab('signup')} />
+              <LoginForm
+                onSwitchToSignup={() => setActiveTab('signup')}
+                resetToken={resetToken}
+                onResetSuccess={handleResetSuccess}
+              />
             ) : (
               <SignupForm onSwitchToLogin={() => setActiveTab('login')} />
             )}

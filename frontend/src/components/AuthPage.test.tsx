@@ -10,7 +10,7 @@ vi.mock('react-router-dom', async () => {
 });
 
 vi.mock('../services/productService', () => ({
-  authService: { login: vi.fn(), register: vi.fn() },
+  authService: { login: vi.fn(), register: vi.fn(), forgotPassword: vi.fn(), resetPassword: vi.fn() },
 }));
 
 beforeEach(() => {
@@ -59,5 +59,27 @@ describe('AuthPage', () => {
     );
     const ano = new Date().getFullYear();
     expect(screen.getByText(new RegExp(`© ${ano}`))).toBeInTheDocument();
+  });
+});
+
+describe('AuthPage — reset token in URL', () => {
+  it('passa resetToken para LoginForm quando ?token= está na URL', () => {
+    Object.defineProperty(window, 'location', {
+      value: { ...window.location, search: '?token=meu.token.jwt' },
+      writable: true,
+    });
+
+    render(
+      <MemoryRouter>
+        <AuthPage />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole('heading', { name: 'Redefinir senha' })).toBeInTheDocument();
+
+    Object.defineProperty(window, 'location', {
+      value: { ...window.location, search: '' },
+      writable: true,
+    });
   });
 });
