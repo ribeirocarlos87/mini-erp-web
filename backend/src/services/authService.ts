@@ -128,9 +128,12 @@ export class AuthService {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) return;
 
+    const secret = process.env.RESET_JWT_SECRET;
+    if (!secret) throw new AppError('RESET_JWT_SECRET não configurado', 500);
+
     const token = jwt.sign(
       { userId: user.id, purpose: 'password_reset' },
-      (process.env.RESET_JWT_SECRET || 'reset_secret') as string,
+      secret,
       { expiresIn: '1h' } as any
     );
 
@@ -138,9 +141,12 @@ export class AuthService {
   }
 
   static async resetPassword(token: string, newPassword: string): Promise<void> {
+    const secret = process.env.RESET_JWT_SECRET;
+    if (!secret) throw new AppError('RESET_JWT_SECRET não configurado', 500);
+
     let payload: any;
     try {
-      payload = jwt.verify(token, (process.env.RESET_JWT_SECRET || 'reset_secret') as string);
+      payload = jwt.verify(token, secret);
     } catch {
       throw new AppError('Token inválido ou expirado', 401);
     }
@@ -150,6 +156,9 @@ export class AuthService {
     }
 
     const newHash = await bcrypt.hash(newPassword, 10);
+    const userExists = await prisma.user.findUnique({ where: { id: payload.userId } });
+    if (!userExists) throw new AppError('Token inválido ou expirado', 401);
+
     await prisma.user.update({
       where: { id: payload.userId },
       data: { passwordHash: newHash },

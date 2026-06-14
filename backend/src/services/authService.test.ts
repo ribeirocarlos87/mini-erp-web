@@ -12,6 +12,7 @@ vi.mock('./emailService', () => ({
 import { sendPasswordResetEmail } from './emailService';
 
 beforeEach(async () => {
+  vi.clearAllMocks();
   await cleanDatabase();
 });
 
