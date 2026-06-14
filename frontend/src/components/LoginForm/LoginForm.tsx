@@ -107,7 +107,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, resetToken, onR
     try {
       await authService.resetPassword(resetToken!, newPassword);
       onResetSuccess?.();
-      navigate('/login');
+      setView('login');
     } catch (err: any) {
       const msg = err.response?.data?.error || 'Token inválido ou expirado';
       setError(msg);
