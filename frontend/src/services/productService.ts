@@ -50,6 +50,14 @@ export const authService = {
     });
     return response.data;
   },
+
+  forgotPassword: async (email: string): Promise<void> => {
+    await apiClient.post('/auth/forgot-password', { email });
+  },
+
+  resetPassword: async (token: string, newPassword: string): Promise<void> => {
+    await apiClient.post('/auth/reset-password', { token, newPassword });
+  },
 };
 
 export const productService = {
