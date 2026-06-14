@@ -108,13 +108,11 @@ router.patch(
 
 router.post(
   '/forgot-password',
-  [body('email').isEmail().withMessage('Valid email is required')],
   async (req: AuthRequest, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
     try {
-      await AuthService.requestPasswordReset(req.body.email);
+      if (req.body.email) {
+        await AuthService.requestPasswordReset(req.body.email);
+      }
     } catch (error: any) {
       console.error('Forgot password error:', error.message);
     }

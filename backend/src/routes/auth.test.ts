@@ -193,11 +193,11 @@ describe('POST /api/auth/forgot-password', () => {
     expect(res.body.message).toContain('Se o email existir');
   });
 
-  it('400 quando email é inválido', async () => {
+  it('200 mesmo com email inválido (sem vazar informação)', async () => {
     const res = await request(app)
       .post('/api/auth/forgot-password')
       .send({ email: 'nao-um-email' });
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(200);
   });
 });
 
