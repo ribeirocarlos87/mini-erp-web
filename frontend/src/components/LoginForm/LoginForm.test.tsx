@@ -16,10 +16,14 @@ vi.mock('../../services/productService', () => ({
   authService: {
     login: vi.fn(),
     register: vi.fn(),
+    forgotPassword: vi.fn(),
+    resetPassword: vi.fn(),
   },
 }));
 
 const mockedLogin = vi.mocked(authService.login);
+const mockedForgotPassword = vi.mocked(authService.forgotPassword);
+const mockedResetPassword = vi.mocked(authService.resetPassword);
 
 const renderForm = () =>
   render(
@@ -105,5 +109,86 @@ describe('LoginForm', () => {
     );
     await user.click(screen.getByRole('button', { name: 'Cadastre-se' }));
     expect(onSwitch).toHaveBeenCalled();
+  });
+});
+
+describe('LoginForm — view: forgot', () => {
+  it('clicar em "Esqueceu?" troca para a view forgot', async () => {
+    const user = userEvent.setup();
+    renderForm();
+    await user.click(screen.getByRole('button', { name: 'Esqueceu?' }));
+    expect(screen.getByRole('heading', { name: 'Recuperar senha' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Seu e-mail')).toBeInTheDocument();
+  });
+
+  it('submeter email chama forgotPassword e mostra confirmação', async () => {
+    mockedForgotPassword.mockResolvedValue(undefined);
+    const user = userEvent.setup();
+    renderForm();
+    await user.click(screen.getByRole('button', { name: 'Esqueceu?' }));
+    await user.type(screen.getByLabelText('Seu e-mail'), 'foo@bar.com');
+    await user.click(screen.getByRole('button', { name: 'Enviar link' }));
+    await waitFor(() =>
+      expect(screen.getByText(/link enviado/i)).toBeInTheDocument()
+    );
+    expect(mockedForgotPassword).toHaveBeenCalledWith('foo@bar.com');
+  });
+
+  it('botão "Voltar" retorna para a view login', async () => {
+    const user = userEvent.setup();
+    renderForm();
+    await user.click(screen.getByRole('button', { name: 'Esqueceu?' }));
+    await user.click(screen.getByRole('button', { name: 'Voltar' }));
+    expect(screen.getByRole('heading', { name: 'Bem-vindo de volta' })).toBeInTheDocument();
+  });
+});
+
+describe('LoginForm — view: reset', () => {
+  const renderReset = (token = 'valid.reset.token') =>
+    render(
+      <MemoryRouter>
+        <LoginForm
+          onSwitchToSignup={vi.fn()}
+          resetToken={token}
+          onResetSuccess={vi.fn()}
+        />
+      </MemoryRouter>
+    );
+
+  it('renderiza view reset quando resetToken prop é fornecido', () => {
+    renderReset();
+    expect(screen.getByRole('heading', { name: 'Redefinir senha' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Nova senha')).toBeInTheDocument();
+    expect(screen.getByLabelText('Confirmar nova senha')).toBeInTheDocument();
+  });
+
+  it('mostra erro quando as senhas não coincidem', async () => {
+    const user = userEvent.setup();
+    renderReset();
+    await user.type(screen.getByLabelText('Nova senha'), 'senha123');
+    await user.type(screen.getByLabelText('Confirmar nova senha'), 'diferente');
+    await user.click(screen.getByRole('button', { name: 'Redefinir senha' }));
+    expect(await screen.findByText('As senhas não coincidem')).toBeInTheDocument();
+    expect(mockedResetPassword).not.toHaveBeenCalled();
+  });
+
+  it('chama resetPassword e onResetSuccess em sucesso', async () => {
+    mockedResetPassword.mockResolvedValue(undefined);
+    const onResetSuccess = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <MemoryRouter>
+        <LoginForm
+          onSwitchToSignup={vi.fn()}
+          resetToken="my.reset.token"
+          onResetSuccess={onResetSuccess}
+        />
+      </MemoryRouter>
+    );
+    await user.type(screen.getByLabelText('Nova senha'), 'senhaNova123');
+    await user.type(screen.getByLabelText('Confirmar nova senha'), 'senhaNova123');
+    await user.click(screen.getByRole('button', { name: 'Redefinir senha' }));
+    await waitFor(() => expect(onResetSuccess).toHaveBeenCalled());
+    expect(mockedResetPassword).toHaveBeenCalledWith('my.reset.token', 'senhaNova123');
   });
 });
