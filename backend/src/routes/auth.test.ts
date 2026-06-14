@@ -1,3 +1,9 @@
+import { vi } from 'vitest';
+
+vi.mock('../services/emailService', () => ({
+  sendPasswordResetEmail: vi.fn().mockResolvedValue(undefined),
+}));
+
 import { describe, it, expect, beforeEach, afterAll } from 'vitest';
 import request from 'supertest';
 import jwt from 'jsonwebtoken';
@@ -165,6 +171,70 @@ describe('PATCH /api/auth/password', () => {
       .patch('/api/auth/password')
       .set('Authorization', `Bearer ${reg.token}`)
       .send({ currentPassword: 'senhaAntiga' });
+    expect(res.status).toBe(400);
+  });
+});
+
+describe('POST /api/auth/forgot-password', () => {
+  it('200 com email existente (e não vaza se existe)', async () => {
+    await AuthService.registerUser('U', 'u@test.local', 'senha123');
+    const res = await request(app)
+      .post('/api/auth/forgot-password')
+      .send({ email: 'u@test.local' });
+    expect(res.status).toBe(200);
+    expect(res.body.message).toContain('Se o email existir');
+  });
+
+  it('200 com email desconhecido (anti-enumeração)', async () => {
+    const res = await request(app)
+      .post('/api/auth/forgot-password')
+      .send({ email: 'nao@existe.local' });
+    expect(res.status).toBe(200);
+    expect(res.body.message).toContain('Se o email existir');
+  });
+
+  it('400 quando email é inválido', async () => {
+    const res = await request(app)
+      .post('/api/auth/forgot-password')
+      .send({ email: 'nao-um-email' });
+    expect(res.status).toBe(400);
+  });
+});
+
+describe('POST /api/auth/reset-password', () => {
+  it('200 com token válido e nova senha', async () => {
+    const { user } = await AuthService.registerUser('U', 'reset@test.local', 'senhaAntiga');
+    const token = jwt.sign(
+      { userId: user.id, purpose: 'password_reset' },
+      process.env.RESET_JWT_SECRET!,
+      { expiresIn: '1h' }
+    );
+
+    const res = await request(app)
+      .post('/api/auth/reset-password')
+      .send({ token, newPassword: 'senhaNova123' });
+    expect(res.status).toBe(200);
+    expect(res.body.message).toContain('sucesso');
+  });
+
+  it('401 com token inválido', async () => {
+    const res = await request(app)
+      .post('/api/auth/reset-password')
+      .send({ token: 'invalido.token.aqui', newPassword: 'senhaNova123' });
+    expect(res.status).toBe(401);
+  });
+
+  it('400 com newPassword menor que 6 caracteres', async () => {
+    const res = await request(app)
+      .post('/api/auth/reset-password')
+      .send({ token: 'qualquer', newPassword: '123' });
+    expect(res.status).toBe(400);
+  });
+
+  it('400 quando newPassword está ausente', async () => {
+    const res = await request(app)
+      .post('/api/auth/reset-password')
+      .send({ token: 'qualquer' });
     expect(res.status).toBe(400);
   });
 });
