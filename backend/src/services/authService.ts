@@ -1,6 +1,7 @@
 import prisma from '../db/prismaClient';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { sendPasswordResetEmail } from './emailService';
 
 export class AppError extends Error {
   status: number;
@@ -121,5 +122,37 @@ export class AuthService {
       },
       token,
     };
+  }
+
+  static async requestPasswordReset(email: string): Promise<void> {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return;
+
+    const token = jwt.sign(
+      { userId: user.id, purpose: 'password_reset' },
+      (process.env.RESET_JWT_SECRET || 'reset_secret') as string,
+      { expiresIn: '1h' } as any
+    );
+
+    await sendPasswordResetEmail(email, token);
+  }
+
+  static async resetPassword(token: string, newPassword: string): Promise<void> {
+    let payload: any;
+    try {
+      payload = jwt.verify(token, (process.env.RESET_JWT_SECRET || 'reset_secret') as string);
+    } catch {
+      throw new AppError('Token inválido ou expirado', 401);
+    }
+
+    if (payload.purpose !== 'password_reset') {
+      throw new AppError('Token inválido ou expirado', 401);
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { id: payload.userId },
+      data: { passwordHash: newHash },
+    });
   }
 }
