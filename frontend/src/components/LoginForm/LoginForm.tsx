@@ -88,14 +88,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, resetToken, onR
 
   // ── Reset submit ──────────────────────────────────────────────────────────
 
+  const passwordTooShort = newPassword.length > 0 && newPassword.length < 6;
+  const passwordsMatch   = confirmPassword.length > 0 && newPassword === confirmPassword;
+  const passwordsMismatch = confirmPassword.length > 0 && newPassword !== confirmPassword;
+
   const handleResetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      setError('As senhas não coincidem');
-      return;
-    }
     if (newPassword.length < 6) {
       setError('A senha deve ter pelo menos 6 caracteres');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError('As senhas não coincidem');
       return;
     }
     setIsLoading(true);
@@ -103,6 +107,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, resetToken, onR
     try {
       await authService.resetPassword(resetToken!, newPassword);
       onResetSuccess?.();
+      navigate('/login');
     } catch (err: any) {
       const msg = err.response?.data?.error || 'Token inválido ou expirado';
       setError(msg);
@@ -222,6 +227,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, resetToken, onR
               )}
             </button>
           </div>
+          {passwordTooShort && (
+            <span className={`${styles.fieldHint} ${styles.fieldHintError}`}>
+              Mínimo de 6 caracteres
+            </span>
+          )}
         </div>
 
         <div className={styles.formGroup}>
@@ -236,6 +246,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup, resetToken, onR
             disabled={isLoading}
             autoComplete="new-password"
           />
+          {passwordsMismatch && (
+            <span className={`${styles.fieldHint} ${styles.fieldHintError}`}>
+              As senhas não coincidem
+            </span>
+          )}
+          {passwordsMatch && (
+            <span className={`${styles.fieldHint} ${styles.fieldHintOk}`}>
+              ✓ Senhas coincidem
+            </span>
+          )}
         </div>
 
         <button type="submit" disabled={isLoading}>

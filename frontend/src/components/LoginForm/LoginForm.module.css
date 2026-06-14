@@ -253,3 +253,19 @@
   color: #065f46;
   border: 1px solid #6ee7b7;
 }
+
+.fieldHint {
+  font-size: 0.78rem;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fieldHintError {
+  color: #dc2626;
+}
+
+.fieldHintOk {
+  color: #16a34a;
+}

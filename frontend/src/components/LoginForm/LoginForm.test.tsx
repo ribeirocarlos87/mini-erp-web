@@ -162,12 +162,11 @@ describe('LoginForm — view: reset', () => {
     expect(screen.getByLabelText('Confirmar nova senha')).toBeInTheDocument();
   });
 
-  it('mostra erro quando as senhas não coincidem', async () => {
+  it('mostra hint inline quando as senhas não coincidem', async () => {
     const user = userEvent.setup();
     renderReset();
     await user.type(screen.getByLabelText('Nova senha'), 'senha123');
     await user.type(screen.getByLabelText('Confirmar nova senha'), 'diferente');
-    await user.click(screen.getByRole('button', { name: 'Redefinir senha' }));
     expect(await screen.findByText('As senhas não coincidem')).toBeInTheDocument();
     expect(mockedResetPassword).not.toHaveBeenCalled();
   });
