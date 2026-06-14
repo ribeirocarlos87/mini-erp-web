@@ -241,3 +241,15 @@
   .form { padding: var(--spacing-lg) var(--spacing-md); }
   .form h2 { font-size: var(--font-size-lg); }
 }
+
+.successMessage {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
